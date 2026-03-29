@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Wellness Journey — Meal Plan &amp; Recipes</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .section-title {
+      font-size: 1.375rem; font-weight: 800; color: var(--text);
+      letter-spacing: -0.025em; margin-bottom: 18px; margin-top: 40px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .section-title:first-of-type { margin-top: 0; }
+  </style>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="nav-inner">
+    <a class="nav-brand" href="index.html">🌿 My Wellness Journey</a>
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
+      <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+        <path d="M3 11h16M3 6h16M3 16h16"/>
+      </svg>
+    </button>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="index.html">Dashboard</a></li>
+      <li><a href="tracker.html">Week 1 Tracker</a></li>
+      <li><a href="meals.html" class="active">Meal Plan</a></li>
+      <li><a href="progress.html">Progress</a></li>
+      <li><a href="grocery.html">Grocery List</a></li>
+    </ul>
+  </div>
+</nav>
+
+<div class="page-container">
+  <div class="page-header">
+    <h1 class="page-title">Meal Plan &amp; Recipes</h1>
+    <p class="page-subtitle">Your complete Week 1 calendar + all 9 recipes with instructions</p>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       WEEKLY CALENDAR TABLE
+  ═══════════════════════════════════════════════════════ -->
+  <h2 class="section-title">📅 Weekly Meal Calendar</h2>
+  <div class="meal-table-wrap">
+    <table class="meal-table">
+      <thead>
+        <tr>
+          <th>Meal</th>
+          <th class="day-head">☀️ Sun Mar 30<br><small style="font-weight:500;opacity:.8">WFH · OT 7:30am</small></th>
+          <th class="day-head">Mon Mar 31<br><small style="font-weight:500;opacity:.8">Office · OT 4:30pm</small></th>
+          <th class="day-head">Tue Apr 1<br><small style="font-weight:500;opacity:.8">Office · OT 4:30pm</small></th>
+          <th class="day-head">Wed Apr 2<br><small style="font-weight:500;opacity:.8">Office · OT 4:30pm</small></th>
+          <th class="day-head">Thu Apr 3<br><small style="font-weight:500;opacity:.8">WFH · OT 7:30am</small></th>
+          <th class="day-head">Fri Apr 4<br><small style="font-weight:500;opacity:.8">Weekend</small></th>
+          <th class="day-head">Sat Apr 5<br><small style="font-weight:500;opacity:.8">Meal Prep Day</small></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Breakfast</td>
+          <td>Besan ke chille 2 + mint chutney<br><span class="p-tag">14g protein</span></td>
+          <td>Overnight oats jar packed<br><span class="p-tag">22g protein</span></td>
+          <td>Besan ke chille 2 packed from Sunday batch<br><span class="p-tag">14g protein</span></td>
+          <td>Overnight oats jar packed<br><span class="p-tag">22g protein</span></td>
+          <td>Smoothie bowl — yogurt + berries + granola<br><span class="p-tag">20g protein</span></td>
+          <td>Besan ke chille fresh + chai<br><span class="p-tag">14g protein</span></td>
+          <td>Masala oats or overnight oats<br><span class="p-tag">18g protein</span></td>
+        </tr>
+        <tr>
+          <td>Protein Shake</td>
+          <td>Premier Protein cafe latte<br><span class="p-tag">30g protein</span></td>
+          <td>Premier Protein cafe latte<br><span class="p-tag">30g protein</span></td>
+          <td>Premier Protein cafe latte<br><span class="p-tag">30g protein</span></td>
+          <td>Premier Protein cafe latte<br><span class="p-tag">30g protein</span></td>
+          <td>Premier Protein cafe latte<br><span class="p-tag">30g protein</span></td>
+          <td style="color:var(--text-light);font-style:italic">Optional<br><span class="p-tag" style="background:var(--gray-100);color:var(--text-light)">0–30g</span></td>
+          <td style="color:var(--text-light);font-style:italic">Optional<br><span class="p-tag" style="background:var(--gray-100);color:var(--text-light)">0–30g</span></td>
+        </tr>
+        <tr>
+          <td>Lunch</td>
+          <td>Lentil soup + whole wheat pita<br><span class="p-tag">18g protein</span></td>
+          <td>Quinoa veggie bowl packed<br><span class="p-tag">22g protein</span></td>
+          <td>Quinoa veggie bowl packed<br><span class="p-tag">22g protein</span></td>
+          <td>Quinoa veggie bowl packed<br><span class="p-tag">22g protein</span></td>
+          <td>Leftover dal + rice or lentil soup<br><span class="p-tag">18g protein</span></td>
+          <td style="color:var(--text-light);font-style:italic">Eat out — Mediterranean or Indian<br><span class="p-tag">~15g protein</span></td>
+          <td>Light wrap or leftovers<br><span class="p-tag">~14g protein</span></td>
+        </tr>
+        <tr>
+          <td>Snack</td>
+          <td>Apple + almond butter<br><span class="p-tag">7g protein</span></td>
+          <td>Cottage cheese + cucumber packed<br><span class="p-tag">14g protein</span></td>
+          <td>Hummus + veggie sticks packed<br><span class="p-tag">5g protein</span></td>
+          <td>Cottage cheese + cucumber packed<br><span class="p-tag">14g protein</span></td>
+          <td>Banana + handful of almonds<br><span class="p-tag">6g protein</span></td>
+          <td>Greek yogurt + berries + granola<br><span class="p-tag">18g protein</span></td>
+          <td>Fruit + mixed nuts<br><span class="p-tag">6g protein</span></td>
+        </tr>
+        <tr>
+          <td>Dinner</td>
+          <td>Paneer tikka wrap + raita<br><span class="p-tag">28g protein</span></td>
+          <td>Dal tadka + brown rice + roti<br><span class="p-tag">18g protein</span></td>
+          <td>Pasta with tomato-lentil sauce<br><span class="p-tag">22g protein</span></td>
+          <td>Stuffed aloo paratha + yogurt<br><span class="p-tag">18g protein</span></td>
+          <td>Black bean veggie burger wrap<br><span class="p-tag">20g protein</span></td>
+          <td style="color:var(--text-light);font-style:italic">Homemade pizza or treat meal out<br><span class="p-tag">~15g protein</span></td>
+          <td>Warm grain bowl — quinoa + roasted veggies + feta<br><span class="p-tag">20g protein</span></td>
+        </tr>
+        <tr>
+          <td style="background:var(--teal-light);color:var(--teal-dark);font-weight:800">Total Protein</td>
+          <td style="background:var(--teal-light);font-weight:700;color:var(--purple)">~97g</td>
+          <td style="background:var(--teal-light);font-weight:700;color:var(--purple)">~106g</td>
+          <td style="background:var(--teal-light);font-weight:700;color:var(--purple)">~93g</td>
+          <td style="background:var(--teal-light);font-weight:700;color:var(--purple)">~106g</td>
+          <td style="background:var(--teal-light);font-weight:700;color:var(--purple)">~94g</td>
+          <td style="background:var(--teal-light);font-weight:700;color:var(--purple)">~62–92g</td>
+          <td style="background:var(--teal-light);font-weight:700;color:var(--purple)">~58–88g</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       RECIPE CARDS
+  ═══════════════════════════════════════════════════════ -->
+  <h2 class="section-title">👩‍🍳 All Recipes</h2>
+  <div class="recipe-grid">
+
+    <!-- 1. Besan ke Chille -->
+    <div class="recipe-card">
+      <div class="recipe-card-head">
+        <h3>Besan ke Chille</h3>
+        <div class="recipe-meta">
+          <span class="recipe-meta-item">👤 Serves 2</span>
+          <span class="recipe-meta-item">⏱ Prep 10 min</span>
+          <span class="recipe-meta-item">🔥 Cook 15 min</span>
+        </div>
+        <div class="recipe-badges">
+          <span class="recipe-badge-protein">💜 14g protein/serving</span>
+          <span class="recipe-badge-cal">🔥 ~220 cal</span>
+        </div>
+      </div>
+      <div class="recipe-body">
+        <div class="recipe-section">
+          <div class="recipe-section-title">Ingredients</div>
+          <ul>
+            <li>1 cup besan (chickpea flour)</li>
+            <li>¾ cup water</li>
+            <li>½ small onion, finely chopped</li>
+            <li>1 green chili, finely chopped</li>
+            <li>2 tbsp fresh cilantro, chopped</li>
+            <li>¼ tsp turmeric</li>
+            <li>½ tsp cumin seeds</li>
+            <li>Salt to taste</li>
+            <li>1 tsp oil per chilla</li>
+            <li>Mint chutney: mint, cilantro, chili, lemon, salt</li>
+          </ul>
+        </div>
+        <div class="recipe-section">
+          <div class="recipe-section-title">Instructions</div>
+          <ol>
+            <li>Whisk besan with water until no lumps remain</li>
+            <li>Mix in onion, chili, cilantro, turmeric, cumin, and salt</li>
+            <li>Heat a non-stick pan over medium heat, add ½ tsp oil</li>
+            <li>Pour a ladleful of batter and spread into a thin 7-inch circle</li>
+            <li>Cook 2–3 min until edges lift and bottom is golden brown</li>
+            <li>Flip and cook 1–2 more minutes</li>
+            <li>Repeat for remaining batter</li>
+            <li>Blend chutney ingredients until smooth; serve alongside</li>
+          </ol>
+        </div>
+        <div class="tip-box" style="margin-top:12px">
+          <div class="tip-box-label">Meal Prep Tip</div>
+          <p>Make the full batch on Sunday. Refrigerate in a container. Reheat at 45 sec in microwave for Tuesday's office breakfast.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. Overnight Oats Jar -->
+    <div class="recipe-card">
+      <div class="recipe-card-head">
+        <h3>Overnight Oats Jar</h3>
+        <div class="recipe-meta">
+          <span class="recipe-meta-item">👤 Serves 1</span>
+          <span class="recipe-meta-item">⏱ Prep 5 min</span>
+          <span class="recipe-meta-item">🌙 Chill overnight</span>
+        </div>
+        <div class="recipe-badges">
+          <span class="recipe-badge-protein">💜 22g protein</span>
+          <span class="recipe-badge-cal">🔥 ~380 cal</span>
+        </div>
+      </div>
+      <div class="recipe-body">
+        <div class="recipe-section">
+          <div class="recipe-section-title">Ingredients</div>
+          <ul>
+            <li>½ cup rolled oats (Bob's Red Mill)</li>
+            <li>½ cup Fage 2% Greek yogurt</li>
+            <li>½ cup whole milk</li>
+            <li>1 tbsp chia seeds</li>
+            <li>1 tsp raw honey</li>
+            <li>½ cup mixed berries (fresh or frozen)</li>
+            <li>Pinch of cinnamon (optional)</li>
+          </ul>
+        </div>
+        <div class="recipe-section">
+          <div class="recipe-section-title">Instructions</div>
+          <ol>
+            <li>Add oats to a mason jar or lidded container</li>
+            <li>Add Greek yogurt, milk, chia seeds, and honey</li>
+            <li>Stir well to combine all ingredients</li>
+            <li>Top with mixed berries</li>
+            <li>Seal and refrigerate at least 6 hours (overnight)</li>
+            <li>In the morning, stir and enjoy cold or gently warmed</li>
+          </ol>
+        </div>
+        <div class="tip-box" style="margin-top:12px">
+          <div class="tip-box-label">Meal Prep Tip</div>
+          <p>Prep 2 jars on Sunday night (for Mon) and Tuesday night (for Wed). Takes 5 minutes total.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. Quinoa Veggie Lunch Bowl -->
+    <div class="recipe-card">
+      <div class="recipe-card-head">
+        <h3>Quinoa Veggie Lunch Bowl</h3>
+        <div class="recipe-meta">
+          <span class="recipe-meta-item">👤 Serves 3 (batch)</span>
+          <span class="recipe-meta-item">⏱ Prep 10 min</span>
+          <span class="recipe-meta-item">🔥 Cook 20 min</span>
+        </div>
+        <div class="recipe-badges">
+          <span class="recipe-badge-protein">💜 22g protein/serving</span>
+          <span class="recipe-badge-cal">🔥 ~420 cal</span>
+        </div>
+      </div>
+      <div class="recipe-body">
+        <div class="recipe-section">
+          <div class="recipe-section-title">Ingredients (3 servings)</div>
+          <ul>
+            <li>1½ cups dry quinoa (Ancient Harvest)</li>
+            <li>1 can chickpeas, drained &amp; rinsed</li>
+            <li>2 cups baby spinach</li>
+            <li>1 cup cherry tomatoes, halved</li>
+            <li>1 cucumber, diced</li>
+            <li>½ cup feta crumbles (Athenos)</li>
+            <li>3 tbsp extra-virgin olive oil</li>
+            <li>Juice of 1 lemon</li>
+            <li>1 tsp Italian seasoning, salt &amp; pepper</li>
+          </ul>
+        </div>
+        <div class="recipe-section">
+          <div class="recipe-section-title">Instructions</div>
+          <ol>
+            <li>Rinse quinoa, cook in 3 cups water — bring to boil, reduce heat, simmer 15 min</li>
+            <li>Toss chickpeas with 1 tbsp oil, salt, and cumin; spread on baking sheet</li>
+            <li>Roast chickpeas at 400°F for 18–20 min until crispy</li>
+            <li>Let quinoa cool slightly, then divide into 3 meal-prep containers</li>
+            <li>Top each with spinach, tomatoes, cucumber, roasted chickpeas, feta</li>
+            <li>Whisk remaining olive oil + lemon juice; keep dressing in small container on side</li>
+            <li>Refrigerate. Add dressing just before eating for best freshness.</li>
+          </ol>
+        </div>
+        <div class="tip-box" style="margin-top:12px">
+          <div class="tip-box-label">Meal Prep Tip</div>
+          <p>Sunday batch yields 3 lunches (Mon, Tue, Wed). Total prep time: ~30 minutes for all 3.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. Dal Tadka + Brown Rice -->
+    <div class="recipe-card">
+      <div class="recipe-card-head">
+        <h3>Dal Tadka + Brown Rice</h3>
+        <div class="recipe-meta">
+          <span class="recipe-meta-item">👤 Serves 3–4</span>
+          <span class="recipe-meta-item">⏱ Prep 10 min</span>
+          <span class="recipe-meta-item">🔥 Cook 30 min</span>
+        </div>
+        <div class="recipe-badges">
+          <span class="recipe-badge-protein">💜 18g protein/serving</span>
+          <span class="recipe-badge-cal">🔥 ~380 cal</span>
+        </div>
+      </div>
+      <div class="recipe-body">
+        <div class="recipe-section">
+          <div class="recipe-section-title">Ingredients</div>
+          <ul>
+            <li>1 cup toor dal (Swad or Laxmi)</li>
+            <li>1 medium onion, finely diced</li>
+            <li>2 tomatoes, chopped</li>
+            <li>4 garlic cloves, minced</li>
+            <li>1-inch fresh ginger, grated</li>
+            <li>1 tsp cumin seeds</li>
+            <li>½ tsp turmeric powder</li>
+            <li>1 tsp coriander powder</li>
+            <li>½ tsp garam masala</li>
+            <li>Salt to taste, 2 tbsp ghee or oil</li>
+            <li>1½ cups brown rice (Lundberg)</li>
+            <li>Fresh cilantro to garnish</li>
+          </ul>
+        </div>
+        <div class="recipe-section">
+          <div class="recipe-section-title">Instructions</div>
+          <ol>
+            <li>Wash dal and pressure cook with 3 cups water + turmeric (3–4 whistles or 20 min in pot)</li>
+            <li>Cook brown rice separately per package (about 40 min)</li>
+            <li>Heat ghee in a pan; add cumin seeds and let splutter</li>
+            <li>Sauté onion until golden brown, ~8 minutes</li>
+            <li>Add ginger-garlic paste, cook 2 minutes</li>
+            <li>Add tomatoes, cook until soft and oil separates</li>
+            <li>Add coriander, garam masala, and salt; cook 2 minutes</li>
+            <li>Pour in cooked dal, stir well, adjust consistency with water</li>
+            <li>Simmer 8–10 minutes; garnish with cilantro</li>
+            <li>Serve hot over brown rice with a whole wheat roti</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. Paneer Tikka Wrap + Raita -->
+    <div class="recipe-card">
+      <div class="recipe-card-head">
+        <h3>Paneer Tikka Wrap + Raita</h3>
+        <div class="recipe-meta">
+          <span class="recipe-meta-item">👤 Serves 1</span>
+          <span class="recipe-meta-item">⏱ Prep 15 min + 30 min marination</span>
+          <span class="recipe-meta-item">🔥 Cook 20 min</span>
+        </div>
+        <div class="recipe-badges">
+          <span class="recipe-badge-protein">💜 28g protein</span>
+          <span class="recipe-badge-cal">🔥 ~450 cal</span>
+        </div>
+      </div>
+      <div class="recipe-body">
+        <div class="recipe-section">
+          <div class="recipe-section-title">Ingredients</div>
+          <ul>
+            <li>150g paneer, cut into 1-inch cubes</li>
+            <li>½ cup plain yogurt (for marinade)</li>
+            <li>1 tsp tandoori masala or tikka spice mix</li>
+            <li>½ tsp cumin, ½ tsp coriander, ½ tsp chili powder</li>
+            <li>1 bell pepper, cut into chunks</li>
+            <li>½ red onion, cut into chunks</li>
+            <li>1 large whole wheat tortilla (Mission Carb Balance)</li>
+            <li>Raita: ½ cup yogurt, ½ cucumber grated, cumin, salt, mint</li>
+          </ul>
+        </div>
+        <div class="recipe-section">
+          <div class="recipe-section-title">Instructions</div>
+          <ol>
+            <li>Mix marinade: yogurt + tikka spice + cumin + coriander + chili + salt</li>
+            <li>Coat paneer cubes, bell pepper, and onion in marinade</li>
+            <li>Marinate at least 30 minutes (up to 8 hours in fridge)</li>
+            <li>Thread on skewers or spread on a baking sheet</li>
+            <li>Broil/bake at 425°F for 15–18 min, turning once, until charred edges appear</li>
+            <li>Make raita: mix yogurt, grated cucumber (squeezed), cumin, salt, fresh mint</li>
+            <li>Warm tortilla 20 seconds in microwave or on tawa</li>
+            <li>Layer paneer tikka + veggies in tortilla, drizzle raita, roll tightly</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+
+    <!-- 6. Stuffed Aloo Paratha + Yogurt -->
+    <div class="recipe-card">
+      <div class="recipe-card-head">
+        <h3>Stuffed Aloo Paratha + Yogurt</h3>
+        <div class="recipe-meta">
+          <span class="recipe-meta-item">👤 Makes 4 parathas</span>
+          <span class="recipe-meta-item">⏱ Prep 20 min</span>
+          <span class="recipe-meta-item">🔥 Cook 25 min</span>
+        </div>
+        <div class="recipe-badges">
+          <span class="recipe-badge-protein">💜 18g protein (2 + yogurt)</span>
+          <span class="recipe-badge-cal">🔥 ~420 cal</span>
+        </div>
+      </div>
+      <div class="recipe-body">
+        <div class="recipe-section">
+          <div class="recipe-section-title">Ingredients</div>
+          <ul>
+            <li>2 cups chakki atta / whole wheat flour (Sujata or Pillsbury Gold)</li>
+            <li>¾ cup warm water</li>
+            <li>2 medium Yukon Gold potatoes, boiled &amp; mashed</li>
+            <li>1 tsp cumin seeds, ½ tsp amchur (dry mango powder)</li>
+            <li>½ tsp red chili powder, 1 tsp coriander powder</li>
+            <li>2 tbsp fresh cilantro, chopped</li>
+            <li>Salt to taste; ghee or butter for cooking</li>
+            <li>1 cup plain whole-milk yogurt for serving</li>
+          </ul>
+        </div>
+        <div class="recipe-section">
+          <div class="recipe-section-title">Instructions</div>
+          <ol>
+            <li>Knead atta with warm water into a soft, smooth dough; rest covered 20 min</li>
+            <li>Mix mashed potatoes with cumin, amchur, chili, coriander, cilantro, and salt</li>
+            <li>Divide dough into 4 equal balls</li>
+            <li>Roll one ball into a 4-inch circle; place 2 tbsp filling in center</li>
+            <li>Fold edges up and pinch closed, then gently roll into a 6-inch flat round</li>
+            <li>Heat tawa on medium-high; place paratha and cook 2 min</li>
+            <li>Flip, spread ½ tsp ghee, press edges down; cook another 2 min until golden spots appear</li>
+            <li>Serve hot with a generous dollop of cold plain yogurt</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+
+    <!-- 7. Pasta with Tomato-Lentil Sauce -->
+    <div class="recipe-card">
+      <div class="recipe-card-head">
+        <h3>Pasta with Tomato-Lentil Sauce</h3>
+        <div class="recipe-meta">
+          <span class="recipe-meta-item">👤 Serves 2</span>
+          <span class="recipe-meta-item">⏱ Prep 10 min</span>
+          <span class="recipe-meta-item">🔥 Cook 25 min</span>
+        </div>
+        <div class="recipe-badges">
+          <span class="recipe-badge-protein">💜 22g protein/serving</span>
+          <span class="recipe-badge-cal">🔥 ~480 cal</span>
+        </div>
+      </div>
+      <div class="recipe-body">
+        <div class="recipe-section">
+          <div class="recipe-section-title">Ingredients</div>
+          <ul>
+            <li>2 cups whole wheat pasta (Barilla Protein+)</li>
+            <li>½ cup red lentils (masoor dal), rinsed</li>
+            <li>1 can (14 oz) crushed tomatoes (Rao's Homemade)</li>
+            <li>½ onion, finely diced</li>
+            <li>3 garlic cloves, minced</li>
+            <li>1 tsp olive oil, 1 tsp Italian seasoning</li>
+            <li>½ tsp red chili flakes, salt &amp; pepper</li>
+            <li>2 tbsp Parmesan (optional), fresh basil to finish</li>
+          </ul>
+        </div>
+        <div class="recipe-section">
+          <div class="recipe-section-title">Instructions</div>
+          <ol>
+            <li>Simmer red lentils in 1½ cups water for 15 min until soft; set aside</li>
+            <li>Cook pasta per package in salted water; drain, reserving ½ cup pasta water</li>
+            <li>In a large pan, sauté onion in olive oil 5 min until translucent</li>
+            <li>Add garlic, cook 1 minute until fragrant</li>
+            <li>Add crushed tomatoes, Italian seasoning, chili flakes; simmer 8 min</li>
+            <li>Stir in cooked lentils; simmer 5 more minutes</li>
+            <li>Toss with drained pasta; loosen with pasta water if needed</li>
+            <li>Top with Parmesan and fresh basil; serve immediately</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+
+    <!-- 8. Black Bean Veggie Burger Wrap -->
+    <div class="recipe-card">
+      <div class="recipe-card-head">
+        <h3>Black Bean Veggie Burger Wrap</h3>
+        <div class="recipe-meta">
+          <span class="recipe-meta-item">👤 Makes 2 patties</span>
+          <span class="recipe-meta-item">⏱ Prep 10 min</span>
+          <span class="recipe-meta-item">🔥 Cook 15 min</span>
+        </div>
+        <div class="recipe-badges">
+          <span class="recipe-badge-protein">💜 20g protein/patty</span>
+          <span class="recipe-badge-cal">🔥 ~430 cal</span>
+        </div>
+      </div>
+      <div class="recipe-body">
+        <div class="recipe-section">
+          <div class="recipe-section-title">Ingredients</div>
+          <ul>
+            <li>1 can (15 oz) black beans, drained &amp; rinsed (Bush's Best)</li>
+            <li>¼ cup rolled oats (acts as binder)</li>
+            <li>½ onion, finely diced</li>
+            <li>2 garlic cloves, minced</li>
+            <li>1 tsp cumin, ½ tsp smoked paprika, salt &amp; pepper</li>
+            <li>1 tbsp olive oil</li>
+            <li>2 large whole wheat tortillas (Mission Carb Balance)</li>
+            <li>Avocado slices, baby spinach, salsa (Frontera)</li>
+          </ul>
+        </div>
+        <div class="recipe-section">
+          <div class="recipe-section-title">Instructions</div>
+          <ol>
+            <li>Partially mash black beans in a bowl, leaving some whole for texture</li>
+            <li>Mix in oats, onion, garlic, cumin, paprika, salt, pepper, and ½ tbsp oil</li>
+            <li>Divide into 2 patties; refrigerate 10 min to firm up</li>
+            <li>Heat remaining ½ tbsp oil in a skillet over medium heat</li>
+            <li>Cook patties 4–5 min per side until golden crust forms</li>
+            <li>Warm tortillas; layer with spinach, avocado, patty, and salsa</li>
+            <li>Roll tightly and cut in half; serve immediately</li>
+          </ol>
+        </div>
+        <div class="tip-box" style="margin-top:12px">
+          <div class="tip-box-label">Note</div>
+          <p>No eggs needed — the oats + bean starch bind perfectly. Patties keep refrigerated for 3 days.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 9. Sunday Warm Grain Bowl -->
+    <div class="recipe-card">
+      <div class="recipe-card-head">
+        <h3>Sunday Warm Grain Bowl</h3>
+        <div class="recipe-meta">
+          <span class="recipe-meta-item">👤 Serves 2</span>
+          <span class="recipe-meta-item">⏱ Prep 15 min</span>
+          <span class="recipe-meta-item">🔥 Cook 25 min</span>
+        </div>
+        <div class="recipe-badges">
+          <span class="recipe-badge-protein">💜 20g protein/serving</span>
+          <span class="recipe-badge-cal">🔥 ~460 cal</span>
+        </div>
+      </div>
+      <div class="recipe-body">
+        <div class="recipe-section">
+          <div class="recipe-section-title">Ingredients</div>
+          <ul>
+            <li>1 cup dry quinoa (Ancient Harvest)</li>
+            <li>1 can chickpeas, drained &amp; rinsed</li>
+            <li>1 zucchini, diced</li>
+            <li>1 cup broccoli florets</li>
+            <li>½ red bell pepper, chunked</li>
+            <li>2 tbsp extra-virgin olive oil (California Olive Ranch)</li>
+            <li>1 tsp cumin, ½ tsp garlic powder, salt &amp; pepper</li>
+            <li>2 cups arugula or baby spinach</li>
+            <li>½ cup feta crumbles (Athenos)</li>
+            <li>Juice of 1 lemon; 1 tbsp tahini (optional dressing)</li>
+          </ul>
+        </div>
+        <div class="recipe-section">
+          <div class="recipe-section-title">Instructions</div>
+          <ol>
+            <li>Preheat oven to 400°F (205°C)</li>
+            <li>Toss chickpeas + veggies with 1½ tbsp olive oil, cumin, garlic powder, salt, pepper</li>
+            <li>Spread on a baking sheet; roast 22–25 min until edges caramelize</li>
+            <li>Rinse and cook quinoa (1 cup quinoa : 2 cups water; simmer 15 min, fluff)</li>
+            <li>Divide quinoa between two bowls</li>
+            <li>Top each with roasted veggies and chickpeas</li>
+            <li>Add fresh arugula or spinach, crumble feta on top</li>
+            <li>Squeeze lemon juice, drizzle with remaining olive oil or tahini</li>
+            <li>Serve warm immediately</li>
+          </ol>
+        </div>
+        <div class="tip-box" style="margin-top:12px">
+          <div class="tip-box-label">Meal Prep Tip</div>
+          <p>This is Saturday's dinner — also your Week 2 Sunday prep day. Double the quinoa to get a head start.</p>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end recipe-grid -->
+</div><!-- end page-container -->
+
+<script>
+document.getElementById('navToggle').addEventListener('click', () => {
+  document.getElementById('navLinks').classList.toggle('open');
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Wellness Journey — Grocery List</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .grocery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 20px;
+    }
+    .grocery-progress-bar { margin-bottom: 28px; }
+    .reset-bar {
+      display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;
+      background: white; border: 1px solid var(--gray-200); border-radius: var(--border-radius);
+      padding: 14px 20px; margin-bottom: 24px; box-shadow: var(--shadow-sm);
+    }
+    .reset-bar-left { display: flex; align-items: center; gap: 14px; }
+    .grocery-check-count { font-size: 0.9375rem; font-weight: 600; color: var(--text-light); }
+    .grocery-check-count strong { color: var(--teal); font-size: 1.0625rem; }
+  </style>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="nav-inner">
+    <a class="nav-brand" href="index.html">🌿 My Wellness Journey</a>
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
+      <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+        <path d="M3 11h16M3 6h16M3 16h16"/>
+      </svg>
+    </button>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="index.html">Dashboard</a></li>
+      <li><a href="tracker.html">Week 1 Tracker</a></li>
+      <li><a href="meals.html">Meal Plan</a></li>
+      <li><a href="progress.html">Progress</a></li>
+      <li><a href="grocery.html" class="active">Grocery List</a></li>
+    </ul>
+  </div>
+</nav>
+
+<div class="page-container">
+  <div class="page-header">
+    <h1 class="page-title">Grocery List</h1>
+    <p class="page-subtitle">Complete Week 1 shopping list with brand recommendations — organized by aisle</p>
+  </div>
+
+  <!-- PROGRESS + RESET BAR -->
+  <div class="reset-bar">
+    <div class="reset-bar-left">
+      <span class="grocery-check-count"><strong id="checkedCount">0</strong> of <strong id="totalCount">0</strong> items checked</span>
+      <div style="width:160px">
+        <div class="progress-track" style="height:9px">
+          <div class="progress-fill" id="groceryProgressFill" style="width:0%"></div>
+        </div>
+      </div>
+    </div>
+    <button class="btn btn-outline btn-sm" onclick="resetList()">↺ Reset List</button>
+  </div>
+
+  <div class="grocery-grid" id="groceryGrid"></div>
+</div>
+
+<script>
+const CATEGORIES = [
+  {
+    icon: '🥛',
+    name: 'Dairy & Protein',
+    items: [
+      { name: 'Premier Protein Shakes — Café Latte (4-pack or case)', brand: 'Premier Protein — Costco or Amazon Subscribe & Save' },
+      { name: 'Paneer, firm block (400–500g)', brand: 'Gopi or Nanak — Indian grocery store' },
+      { name: 'Cottage cheese, small curd', brand: 'Good Culture 2% or Daisy Brand' },
+      { name: 'Greek yogurt, plain 2% (large tub)', brand: 'Fage 2% Total — Costco size saves money' },
+      { name: 'Plain whole-milk yogurt / dahi', brand: 'Stonyfield Organic or Brown Cow Cream Top' },
+      { name: 'Feta cheese, crumbled', brand: 'Athenos Traditional Block Feta' },
+      { name: 'Mozzarella shredded (for pizza night)', brand: 'BelGioioso or Sargento' },
+      { name: 'Whole milk (½ gallon)', brand: 'Organic Valley or local farm brand' },
+    ]
+  },
+  {
+    icon: '🌾',
+    name: 'Grains, Legumes & Flours',
+    items: [
+      { name: 'Besan / chickpea flour (2 lb bag)', brand: 'Swad or Bob\'s Red Mill Garbanzo Flour' },
+      { name: 'Masoor dal / red lentils (2 lb bag)', brand: 'Swad or 24 Mantra Organic' },
+      { name: 'Toor dal / split pigeon peas (2 lb)', brand: 'Swad or Laxmi Brand' },
+      { name: 'Black beans, canned (2–3 cans)', brand: 'Bush\'s Best Black Beans' },
+      { name: 'Chickpeas / garbanzo beans, canned (3 cans)', brand: 'Goya or Bush\'s Best' },
+      { name: 'Quinoa (2 lb bag)', brand: 'Ancient Harvest or Bob\'s Red Mill' },
+      { name: 'Brown rice (2 lb bag)', brand: 'Lundberg Organic Short Grain' },
+      { name: 'Rolled oats, old fashioned (2 lb)', brand: 'Bob\'s Red Mill or Quaker Old Fashioned' },
+      { name: 'Whole wheat pita bread (pack)', brand: 'Joseph\'s Flax Oat Bran & Whole Wheat Pita' },
+      { name: 'Large whole wheat tortillas (10-pack)', brand: 'Mission Carb Balance Whole Wheat' },
+      { name: 'Chakki atta / whole wheat flour (5 lb)', brand: 'Sujata or Pillsbury Gold Chakki Atta' },
+      { name: 'Whole wheat pasta (1 lb box)', brand: 'Barilla Protein+ Penne or Banza Chickpea Pasta' },
+      { name: 'Granola (plain or low-sugar)', brand: 'Kind Healthy Grains Oats & Honey or Bob\'s Red Mill' },
+      { name: 'Whole wheat burger buns (optional)', brand: 'Dave\'s Killer Bread Thin Buns or Arnold' },
+    ]
+  },
+  {
+    icon: '🥦',
+    name: 'Vegetables & Fresh Produce',
+    items: [
+      { name: 'Baby spinach (5 oz clamshell)', brand: 'Organic Girl or 365 Whole Foods Market' },
+      { name: 'Bell peppers, assorted (3–4 peppers)', brand: 'Any fresh produce — red + yellow + orange' },
+      { name: 'English cucumber (2)', brand: 'Any fresh — Persian cucumbers work great too' },
+      { name: 'Baby carrots or carrot sticks', brand: 'Bolthouse Farms Baby Cut Carrots' },
+      { name: 'Broccoli florets (fresh or frozen bag)', brand: 'Trader Joe\'s Organic or Birds Eye Steamfresh' },
+      { name: 'Zucchini (2)', brand: 'Any fresh produce' },
+      { name: 'Yukon Gold potatoes (2 lb bag)', brand: 'Any brand or loose from produce section' },
+      { name: 'Yellow onions (3 lb bag)', brand: 'Any brand' },
+      { name: 'Garlic bulbs (2)', brand: 'Any fresh — Christopher Ranch is great' },
+      { name: 'Fresh ginger root (small knob)', brand: 'Any fresh produce' },
+      { name: 'Cherry tomatoes (1 pint)', brand: 'Sunset Campari Tomatoes or Trader Joe\'s' },
+      { name: 'Arugula or mixed greens', brand: 'Organic Girl or Earthbound Farm' },
+      { name: 'Fresh mint (1 bunch)', brand: 'Any fresh produce — for chutney & raita' },
+      { name: 'Fresh cilantro (1–2 bunches)', brand: 'Any fresh produce' },
+      { name: 'Avocado (2–3 ripe)', brand: 'Organic if available — ripen at room temp' },
+    ]
+  },
+  {
+    icon: '🍓',
+    name: 'Fruits',
+    items: [
+      { name: 'Honeycrisp or Fuji apples (bag)', brand: 'Honeycrisp variety — any grocer' },
+      { name: 'Bananas (bunch)', brand: 'Any — Organic if preferred' },
+      { name: 'Mixed berries — fresh or frozen', brand: 'Driscoll\'s fresh or Wyman\'s Wild Blueberries frozen' },
+      { name: 'Lemons (4–5)', brand: 'Any fresh produce' },
+    ]
+  },
+  {
+    icon: '🫙',
+    name: 'Pantry & Condiments',
+    items: [
+      { name: 'Almond butter, creamy (16 oz jar)', brand: 'Justin\'s Classic Almond Butter' },
+      { name: 'Hummus, classic (large tub)', brand: 'Sabra Classic or Hope Foods Original' },
+      { name: 'Extra-virgin olive oil (16–32 oz)', brand: 'California Olive Ranch EVOO' },
+      { name: 'Crushed tomatoes, canned (28 oz)', brand: 'Rao\'s Homemade — worth every penny' },
+      { name: 'Vegetable broth, low-sodium (32 oz)', brand: 'Pacific Foods Organic Low Sodium' },
+      { name: 'Chia seeds (8–12 oz bag)', brand: 'Navitas Organics or Bob\'s Red Mill' },
+      { name: 'Raw honey (12 oz)', brand: 'Nature Nate\'s 100% Pure Raw & Unfiltered' },
+      { name: 'Tahini (for grain bowl dressing)', brand: 'Soom Foods Premium Sesame Tahini' },
+      { name: 'Salsa (for veggie burger wrap)', brand: 'Frontera Tomatillo Salsa or Trader Joe\'s Salsa Autentica' },
+      { name: 'Pizza sauce (for Friday treat meal)', brand: 'Rao\'s Homemade Marinara Sauce' },
+      { name: 'Ghee or cooking oil', brand: 'Ancient Organics Grass-Fed Ghee or Chosen Foods Avocado Oil' },
+    ]
+  },
+  {
+    icon: '🌶️',
+    name: 'Spices & Indian Pantry',
+    items: [
+      { name: 'Cumin seeds (whole)', brand: 'Rani Brand or Swad — Indian grocery' },
+      { name: 'Turmeric powder', brand: 'Simply Organic or Frontier Co-op' },
+      { name: 'Coriander powder (ground)', brand: 'Simply Organic or Swad' },
+      { name: 'Garam masala blend', brand: 'Shan or MDH Garam Masala — Indian grocery' },
+      { name: 'Kashmiri red chili powder', brand: 'MDH or Everest Kashmiri Lal Mirch' },
+      { name: 'Mustard seeds (black)', brand: 'Swad or Rani Brand' },
+      { name: 'Hing / asafoetida (small tin)', brand: 'LG Brand or Vandevi Hing — Indian grocery' },
+      { name: 'Amchur / dry mango powder', brand: 'Swad or Rani Brand' },
+      { name: 'Chaat masala', brand: 'MDH Chaat Masala or Shan' },
+      { name: 'Italian seasoning', brand: 'McCormick or Frontier' },
+      { name: 'Smoked paprika', brand: 'McCormick Smoked Paprika' },
+      { name: 'Tikka masala / tandoori spice blend', brand: 'Shan Tikka Mix or MDH Tandoori Masala' },
+    ]
+  },
+  {
+    icon: '🥜',
+    name: 'Snack Staples',
+    items: [
+      { name: 'Whole almonds, raw (1 lb bag)', brand: 'Blue Diamond Whole Natural Almonds' },
+      { name: 'Mixed nuts, unsalted (1 lb)', brand: 'Kirkland Signature (Costco) or Trader Joe\'s Mixed Nuts' },
+      { name: 'Backup protein bar (box)', brand: 'RXBAR Chocolate Chip or KIND Protein Bar' },
+      { name: 'Veggie sticks or crackers (for hummus)', brand: 'Trader Joe\'s Mini Carrots + Veggie Straws' },
+    ]
+  },
+];
+
+const STORAGE_KEY = 'wellness_grocery';
+
+function loadChecked() { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); }
+function saveChecked(obj) { localStorage.setItem(STORAGE_KEY, JSON.stringify(obj)); }
+
+function getItemKey(catIdx, itemIdx) { return `c${catIdx}_i${itemIdx}`; }
+
+function render() {
+  const checked = loadChecked();
+  const grid    = document.getElementById('groceryGrid');
+  grid.innerHTML = '';
+
+  let totalItems   = 0;
+  let checkedItems = 0;
+
+  CATEGORIES.forEach((cat, ci) => {
+    totalItems += cat.items.length;
+
+    const catDiv = document.createElement('div');
+    catDiv.className = 'grocery-category';
+
+    const catCheckedCount = cat.items.filter((_,ii) => checked[getItemKey(ci,ii)]).length;
+    checkedItems += catCheckedCount;
+
+    catDiv.innerHTML = `
+      <div class="grocery-cat-head">
+        <span>${cat.icon}</span>
+        <span>${cat.name}</span>
+        <span style="margin-left:auto;opacity:0.8;font-size:0.8125rem">${catCheckedCount}/${cat.items.length}</span>
+      </div>
+      <div class="grocery-items" id="catItems-${ci}"></div>
+    `;
+
+    grid.appendChild(catDiv);
+
+    const itemsContainer = document.getElementById('catItems-'+ci);
+    cat.items.forEach((item, ii) => {
+      const key     = getItemKey(ci, ii);
+      const isChecked = checked[key] || false;
+
+      const itemDiv = document.createElement('label');
+      itemDiv.className = 'grocery-item' + (isChecked ? ' g-checked' : '');
+      itemDiv.innerHTML = `
+        <input type="checkbox" ${isChecked ? 'checked' : ''}>
+        <div style="flex:1;min-width:0">
+          <div class="grocery-item-name">${item.name}</div>
+          <div class="grocery-item-brand">✓ ${item.brand}</div>
+        </div>
+      `;
+
+      const cb = itemDiv.querySelector('input');
+      cb.addEventListener('change', e => {
+        const c = loadChecked();
+        if (e.target.checked) c[key] = true;
+        else delete c[key];
+        saveChecked(c);
+        render();
+      });
+
+      itemsContainer.appendChild(itemDiv);
+    });
+  });
+
+  // Update progress
+  document.getElementById('checkedCount').textContent = checkedItems;
+  document.getElementById('totalCount').textContent   = totalItems;
+  document.getElementById('groceryProgressFill').style.width = (totalItems ? checkedItems/totalItems*100 : 0) + '%';
+}
+
+function resetList() {
+  if (!confirm('Uncheck all grocery items? Great for a fresh shopping trip!')) return;
+  localStorage.removeItem(STORAGE_KEY);
+  render();
+}
+
+document.getElementById('navToggle').addEventListener('click', () => {
+  document.getElementById('navLinks').classList.toggle('open');
+});
+
+render();
+</script>
+</body>
+</html>

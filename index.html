@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Wellness Journey — Dashboard</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .hero {
+      background: linear-gradient(135deg, var(--teal) 0%, #0f7a56 100%);
+      border-radius: var(--border-radius);
+      padding: 36px 32px;
+      color: white;
+      margin-bottom: 24px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -60px; right: -60px;
+      width: 260px; height: 260px;
+      background: rgba(255,255,255,0.06);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: -80px; right: 80px;
+      width: 180px; height: 180px;
+      background: rgba(255,255,255,0.04);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    .hero-date { font-size: 0.875rem; color: rgba(255,255,255,0.78); margin-bottom: 8px; font-weight: 500; }
+    .hero-title { font-size: 2rem; font-weight: 800; letter-spacing: -0.035em; line-height: 1.15; margin-bottom: 6px; }
+    .hero-sub { color: rgba(255,255,255,0.82); font-size: 0.9375rem; }
+    .hero-progress { margin-top: 22px; }
+    .hero-progress-label { font-size: 0.8125rem; color: rgba(255,255,255,0.8); margin-bottom: 6px; font-weight: 500; }
+    .hero-progress-track { background: rgba(255,255,255,0.22); border-radius: 999px; height: 8px; }
+    .hero-progress-fill { height: 100%; background: white; border-radius: 999px; transition: width 0.5s ease; }
+
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 24px; }
+    .today-empty { text-align: center; padding: 36px 20px; color: var(--text-light); }
+    .today-empty .big-icon { font-size: 2.25rem; margin-bottom: 12px; }
+
+    .nav-shortcuts {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 14px;
+    }
+    .shortcut-card {
+      background: white;
+      border: 1.5px solid var(--gray-200);
+      border-radius: var(--border-radius);
+      padding: 18px 20px;
+      text-decoration: none;
+      color: var(--text);
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      box-shadow: var(--shadow-sm);
+    }
+    .shortcut-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); border-color: var(--teal); }
+    .shortcut-icon {
+      width: 48px; height: 48px;
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.5rem; flex-shrink: 0;
+    }
+    .si-teal   { background: var(--teal-light); }
+    .si-purple { background: var(--purple-light); }
+    .si-amber  { background: var(--amber-light); }
+    .shortcut-text h3 { font-size: 0.9375rem; font-weight: 700; margin-bottom: 2px; }
+    .shortcut-text p  { font-size: 0.8125rem; color: var(--text-light); }
+
+    .today-meal-row {
+      display: flex; align-items: center; gap: 10px;
+      padding: 9px 0;
+      border-bottom: 1px solid var(--gray-100);
+    }
+    .today-meal-row:last-of-type { border-bottom: none; }
+    .today-meal-name { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-light); }
+    .today-meal-food { font-size: 0.875rem; color: var(--text); font-weight: 500; }
+
+    @media (max-width: 768px) {
+      .two-col { grid-template-columns: 1fr; }
+      .hero-title { font-size: 1.5rem; }
+      .hero { padding: 24px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="nav-inner">
+    <a class="nav-brand" href="index.html">🌿 My Wellness Journey</a>
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
+      <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+        <path d="M3 11h16M3 6h16M3 16h16"/>
+      </svg>
+    </button>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="index.html" class="active">Dashboard</a></li>
+      <li><a href="tracker.html">Week 1 Tracker</a></li>
+      <li><a href="meals.html">Meal Plan</a></li>
+      <li><a href="progress.html">Progress</a></li>
+      <li><a href="grocery.html">Grocery List</a></li>
+    </ul>
+  </div>
+</nav>
+
+<div class="page-container">
+
+  <!-- HERO BANNER -->
+  <div class="hero">
+    <div class="hero-date" id="heroDayDate"></div>
+    <div class="hero-title">Welcome back, Wellness Warrior! 💪</div>
+    <div class="hero-sub">Preconception health journey &nbsp;·&nbsp; Week 1 &nbsp;·&nbsp; Orangetheory strong</div>
+    <div class="hero-progress">
+      <div class="hero-progress-label" id="heroProgressLabel">Week progress: — of 7 days complete</div>
+      <div class="hero-progress-track">
+        <div class="hero-progress-fill" id="heroProgressFill" style="width:0%"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STATS ROW -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-value" id="statDays">0</div>
+      <div class="stat-label">Days Complete</div>
+    </div>
+    <div class="stat-card stat-purple">
+      <div class="stat-value" id="statMeals">0</div>
+      <div class="stat-label">Meals Checked</div>
+    </div>
+    <div class="stat-card stat-amber">
+      <div class="stat-value" id="statOT">0</div>
+      <div class="stat-label">OT Sessions This Week</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value" id="statWeight">215</div>
+      <div class="stat-label">Current Weight (lbs)</div>
+    </div>
+  </div>
+
+  <!-- TODAY CARD + RIGHT PANEL -->
+  <div class="two-col">
+
+    <!-- TODAY'S MEALS -->
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">🍽️ Today's Meals</span>
+        <span class="badge badge-teal" id="todayBadge">Week 1</span>
+      </div>
+      <div class="card-body" id="todayBody">
+        <div class="today-empty">
+          <div class="big-icon">📅</div>
+          <p><strong>Week 1 starts Sunday, March 30!</strong></p>
+          <p style="margin-top:8px;font-size:0.875rem;color:var(--text-light)">Check back then to see today's meals here.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT COLUMN -->
+    <div style="display:flex;flex-direction:column;gap:16px;">
+
+      <!-- TIP OF THE DAY -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">✨ Tip of the Day</span>
+        </div>
+        <div class="card-body">
+          <p id="tipText" style="font-size:0.9375rem;line-height:1.6;color:var(--text)"></p>
+        </div>
+      </div>
+
+      <!-- WEEK GOALS -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">🎯 Week 1 Goals</span>
+        </div>
+        <div class="card-body" style="display:flex;flex-direction:column;gap:12px;">
+          <div>
+            <div class="progress-label">
+              <span>Meals tracked</span>
+              <span id="goalMealsLbl">0 / 35</span>
+            </div>
+            <div class="progress-track"><div class="progress-fill" id="goalMealsFill" style="width:0%"></div></div>
+          </div>
+          <div>
+            <div class="progress-label">
+              <span>OT sessions</span>
+              <span id="goalOTLbl">0 / 5</span>
+            </div>
+            <div class="progress-track"><div class="progress-fill p-amber" id="goalOTFill" style="width:0%"></div></div>
+          </div>
+          <div style="background:var(--teal-light);border-radius:9px;padding:13px 14px;font-size:0.875rem;line-height:1.7;">
+            <strong>Starting weight:</strong> 215 lbs<br>
+            <strong>First milestone:</strong> 190 lbs<br>
+            <strong>Lbs to goal:</strong> <span id="lbsToGoal" style="font-weight:700;color:var(--teal)">25</span> lbs
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- QUICK NAVIGATION -->
+  <div>
+    <h2 style="font-size:1.125rem;font-weight:700;margin-bottom:14px;">Quick Navigation</h2>
+    <div class="nav-shortcuts">
+      <a href="tracker.html" class="shortcut-card">
+        <div class="shortcut-icon si-teal">📋</div>
+        <div class="shortcut-text"><h3>Week 1 Tracker</h3><p>Check off meals &amp; workouts</p></div>
+      </a>
+      <a href="meals.html" class="shortcut-card">
+        <div class="shortcut-icon si-teal">🥗</div>
+        <div class="shortcut-text"><h3>Meal Plan &amp; Recipes</h3><p>Full recipes &amp; weekly calendar</p></div>
+      </a>
+      <a href="progress.html" class="shortcut-card">
+        <div class="shortcut-icon si-purple">📈</div>
+        <div class="shortcut-text"><h3>Weight Progress</h3><p>Log weight &amp; view chart</p></div>
+      </a>
+      <a href="grocery.html" class="shortcut-card">
+        <div class="shortcut-icon si-amber">🛒</div>
+        <div class="shortcut-text"><h3>Grocery List</h3><p>Shop with brand recommendations</p></div>
+      </a>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const WEEK = [
+  { day:'Sunday',   date:'Mar 30', monthDay:'03-30', hasOT:true,  otTime:'7:30am',  loc:'WFH',
+    meals:[{n:'Breakfast',f:'Besan ke chille 2 + mint chutney',p:14},{n:'Protein Shake',f:'Premier Protein cafe latte',p:30},{n:'Lunch',f:'Lentil soup + whole wheat pita',p:18},{n:'Snack',f:'Apple + almond butter',p:7},{n:'Dinner',f:'Paneer tikka wrap + raita',p:28}],
+    tip:'Day 1 and also your meal prep day — spend 2 hours doing Sunday batch cook to set up the whole week.' },
+  { day:'Monday',   date:'Mar 31', monthDay:'03-31', hasOT:true,  otTime:'4:30pm',  loc:'Office',
+    meals:[{n:'Breakfast',f:'Overnight oats jar packed',p:22},{n:'Protein Shake',f:'Premier Protein cafe latte',p:30},{n:'Lunch',f:'Quinoa veggie bowl packed',p:22},{n:'Snack',f:'Cottage cheese + cucumber packed',p:14},{n:'Dinner',f:'Dal tadka + brown rice + roti',p:18}],
+    tip:'Grab your overnight oats jar and lunch box from the fridge before you leave. Eat your snack before Orangetheory.' },
+  { day:'Tuesday',  date:'Apr 1',  monthDay:'04-01', hasOT:true,  otTime:'4:30pm',  loc:'Office',
+    meals:[{n:'Breakfast',f:'Besan ke chille 2 packed from Sunday batch',p:14},{n:'Protein Shake',f:'Premier Protein cafe latte',p:30},{n:'Lunch',f:'Quinoa veggie bowl packed',p:22},{n:'Snack',f:'Hummus + veggie sticks packed',p:5},{n:'Dinner',f:'Pasta with tomato-lentil sauce',p:22}],
+    tip:'Microwave chilles 45 seconds at office. Hummus snack today keeps it varied.' },
+  { day:'Wednesday',date:'Apr 2',  monthDay:'04-02', hasOT:true,  otTime:'4:30pm',  loc:'Office',
+    meals:[{n:'Breakfast',f:'Overnight oats jar packed',p:22},{n:'Protein Shake',f:'Premier Protein cafe latte',p:30},{n:'Lunch',f:'Quinoa veggie bowl packed',p:22},{n:'Snack',f:'Cottage cheese + cucumber packed',p:14},{n:'Dinner',f:'Stuffed aloo paratha + yogurt',p:18}],
+    tip:"Last office day and final packed quinoa bowl. Tonight's paratha is the most comforting dinner of the week." },
+  { day:'Thursday', date:'Apr 3',  monthDay:'04-03', hasOT:true,  otTime:'7:30am',  loc:'WFH',
+    meals:[{n:'Breakfast',f:'Smoothie bowl — yogurt + berries + granola',p:20},{n:'Protein Shake',f:'Premier Protein cafe latte',p:30},{n:'Lunch',f:'Leftover dal + rice or lentil soup',p:18},{n:'Snack',f:'Banana + handful of almonds',p:6},{n:'Dinner',f:'Black bean veggie burger wrap',p:20}],
+    tip:'5th OT session of the week — incredible consistency. Treat dinner tonight, you earned it.' },
+  { day:'Friday',   date:'Apr 4',  monthDay:'04-04', hasOT:false, loc:'Weekend — Flexible',
+    meals:[{n:'Breakfast',f:'Besan ke chille fresh + chai',p:14},{n:'Protein Shake',f:'Premier Protein (optional)',p:0,opt:true},{n:'Lunch',f:'Eat out smart — Mediterranean or Indian',p:15},{n:'Snack',f:'Greek yogurt + berries + granola',p:18},{n:'Dinner',f:'Homemade pizza or treat meal out',p:15}],
+    tip:'Enjoy your weekend. One treat meal is built in — have it guilt free.' },
+  { day:'Saturday', date:'Apr 5',  monthDay:'04-05', hasOT:false, loc:'Weekend — Meal Prep Day',
+    meals:[{n:'Breakfast',f:'Masala oats or overnight oats',p:18},{n:'Protein Shake',f:'Premier Protein (optional)',p:0,opt:true},{n:'Lunch',f:'Light wrap or leftovers',p:14},{n:'Snack',f:'Fruit + mixed nuts',p:6},{n:'Dinner',f:'Warm grain bowl — quinoa + roasted veggies + feta',p:20}],
+    tip:'End of Week 1! Weigh yourself Sunday morning April 6 before eating for your official check-in.' },
+];
+
+const TIPS = [
+  "Every meal checked off is a deposit in your future self's health account.",
+  "Consistency beats perfection — showing up 80% is better than aiming for 100% and quitting.",
+  "Preconception nutrition is a gift you're giving your future family.",
+  "You're not dieting — you're building a lifestyle your body will thank you for.",
+  "OT + whole foods + rest = the trifecta of transformation.",
+  "Folate, iron, calcium — your lacto-vegetarian diet can cover it all with intention.",
+  "A strong woman takes care of herself first. That's exactly what you're doing.",
+  "Every Sunday prep hour saves you 5 weekday scramble hours.",
+  "Your 190 lb goal is not a finish line — it's a checkpoint on a lifelong journey.",
+  "The scale is one data point. Energy, strength, and joy are the real metrics.",
+  "Premier Protein + whole foods + OT = the formula. Trust the process.",
+  "Rest is part of the plan. Sleep is when transformation happens.",
+  "Lentils, spinach, and dairy — your preconception nutrition trifecta is on point.",
+  "You chose nourishment over deprivation. That's a powerful mindset shift.",
+];
+
+function init() {
+  // Date display
+  const now = new Date();
+  const opts = { weekday:'long', year:'numeric', month:'long', day:'numeric' };
+  document.getElementById('heroDayDate').textContent = now.toLocaleDateString('en-US', opts);
+
+  // Tip of the day (rotate daily)
+  const dayOfYear = Math.floor((now - new Date(now.getFullYear(),0,0)) / 86400000);
+  document.getElementById('tipText').textContent = TIPS[dayOfYear % TIPS.length];
+
+  // Read localStorage stats
+  let daysComplete=0, mealsChecked=0, otSessions=0;
+  for (let d=0; d<7; d++) {
+    const s = JSON.parse(localStorage.getItem('wellness_tracker_day_'+d)||'{}');
+    const m = s.meals || [false,false,false,false,false];
+    if (m.every(Boolean)) daysComplete++;
+    mealsChecked += m.filter(Boolean).length;
+    if (s.ot) otSessions++;
+  }
+
+  document.getElementById('statDays').textContent   = daysComplete;
+  document.getElementById('statMeals').textContent  = mealsChecked;
+  document.getElementById('statOT').textContent     = otSessions;
+
+  document.getElementById('heroProgressFill').style.width    = (daysComplete/7*100)+'%';
+  document.getElementById('heroProgressLabel').textContent   = `Week progress: ${daysComplete} of 7 days complete`;
+
+  document.getElementById('goalMealsLbl').textContent = mealsChecked+' / 35';
+  document.getElementById('goalMealsFill').style.width = Math.min(100,mealsChecked/35*100)+'%';
+  document.getElementById('goalOTLbl').textContent    = otSessions+' / 5';
+  document.getElementById('goalOTFill').style.width   = Math.min(100,otSessions/5*100)+'%';
+
+  // Current weight
+  const weights = JSON.parse(localStorage.getItem('wellness_weights')||'[]');
+  const currentW = weights.length ? weights[weights.length-1].weight : 215;
+  document.getElementById('statWeight').textContent = currentW;
+  document.getElementById('lbsToGoal').textContent  = Math.max(0, currentW - 190).toFixed(1);
+
+  // Today's meals
+  const md = (now.getMonth()+1+'').padStart(2,'0') + '-' + (now.getDate()+'').padStart(2,'0');
+  const di = WEEK.findIndex(d => d.monthDay === md);
+  if (di !== -1) {
+    const day = WEEK[di];
+    document.getElementById('todayBadge').textContent = day.day + ', ' + day.date;
+    const saved = JSON.parse(localStorage.getItem('wellness_tracker_day_'+di)||'{}');
+    const checked = saved.meals || [false,false,false,false,false];
+    let html = '';
+    day.meals.forEach((m,i) => {
+      const ck = checked[i];
+      html += `<div class="today-meal-row">
+        <span style="font-size:1.1rem">${ck ? '✅' : '⬜'}</span>
+        <div style="flex:1;min-width:0">
+          <div class="today-meal-name">${m.n}</div>
+          <div class="today-meal-food" style="${ck ? 'text-decoration:line-through;opacity:0.55':''}">${m.f}</div>
+        </div>
+        <span class="protein-pill${m.opt?'optional':''}">${m.p||'~'}g</span>
+      </div>`;
+    });
+    html += `<div style="margin-top:12px;text-align:right"><a href="tracker.html" style="font-size:0.875rem;color:var(--teal);font-weight:600;text-decoration:none">Open full tracker →</a></div>`;
+    document.getElementById('todayBody').innerHTML = html;
+  }
+}
+
+// Nav toggle
+document.getElementById('navToggle').addEventListener('click', () => {
+  document.getElementById('navLinks').classList.toggle('open');
+});
+
+init();
+</script>
+</body>
+</html>
