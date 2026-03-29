@@ -69,7 +69,7 @@
 <div class="page-container">
   <div class="page-header">
     <h1 class="page-title">Week 1 Tracker</h1>
-    <p class="page-subtitle">Sunday March 30 – Saturday April 5 &nbsp;·&nbsp; Check off each meal and workout as you go</p>
+    <p class="page-subtitle">Monday March 30 – Sunday April 5 &nbsp;·&nbsp; Check off each meal and workout as you go</p>
   </div>
 
   <!-- DAY TABS -->
@@ -82,7 +82,7 @@
 
 <script>
 const WEEK = [
-  { day:'Sunday',    date:'Mar 30', short:'Sun\nMar 30', hasOT:true,  otTime:'7:30am',  loc:'WFH',
+  { day:'Monday',    date:'Mar 30', short:'Mon\nMar 30', hasOT:true,  otTime:'7:30am',  loc:'WFH',
     meals:[
       {n:'Breakfast',    f:'Besan ke chille 2 + mint chutney',           p:14},
       {n:'Protein Shake',f:'Premier Protein cafe latte',                  p:30},
@@ -92,7 +92,7 @@ const WEEK = [
     ],
     tip:'Day 1 and also your meal prep day — spend 2 hours doing Sunday batch cook to set up the whole week.'
   },
-  { day:'Monday',    date:'Mar 31', short:'Mon\nMar 31', hasOT:true,  otTime:'4:30pm',  loc:'Office',
+  { day:'Tuesday',   date:'Mar 31', short:'Tue\nMar 31', hasOT:true,  otTime:'4:30pm',  loc:'Office',
     meals:[
       {n:'Breakfast',    f:'Overnight oats jar packed',                   p:22},
       {n:'Protein Shake',f:'Premier Protein cafe latte',                  p:30},
@@ -102,7 +102,7 @@ const WEEK = [
     ],
     tip:'Grab your overnight oats jar and lunch box from the fridge before you leave. Eat your snack before Orangetheory.'
   },
-  { day:'Tuesday',   date:'Apr 1',  short:'Tue\nApr 1',  hasOT:true,  otTime:'4:30pm',  loc:'Office',
+  { day:'Wednesday', date:'Apr 1',  short:'Wed\nApr 1',  hasOT:true,  otTime:'4:30pm',  loc:'Office',
     meals:[
       {n:'Breakfast',    f:'Besan ke chille 2 packed from Sunday batch',  p:14},
       {n:'Protein Shake',f:'Premier Protein cafe latte',                  p:30},
@@ -112,7 +112,7 @@ const WEEK = [
     ],
     tip:'Microwave chilles 45 seconds at office. Hummus snack today keeps it varied.'
   },
-  { day:'Wednesday', date:'Apr 2',  short:'Wed\nApr 2',  hasOT:true,  otTime:'4:30pm',  loc:'Office',
+  { day:'Thursday',  date:'Apr 2',  short:'Thu\nApr 2',  hasOT:true,  otTime:'4:30pm',  loc:'Office',
     meals:[
       {n:'Breakfast',    f:'Overnight oats jar packed',                   p:22},
       {n:'Protein Shake',f:'Premier Protein cafe latte',                  p:30},
@@ -122,7 +122,7 @@ const WEEK = [
     ],
     tip:"Last office day and final packed quinoa bowl. Tonight's paratha is the most comforting dinner of the week."
   },
-  { day:'Thursday',  date:'Apr 3',  short:'Thu\nApr 3',  hasOT:true,  otTime:'7:30am',  loc:'WFH',
+  { day:'Friday',    date:'Apr 3',  short:'Fri\nApr 3',  hasOT:true,  otTime:'7:30am',  loc:'WFH',
     meals:[
       {n:'Breakfast',    f:'Smoothie bowl — yogurt + berries + granola',  p:20},
       {n:'Protein Shake',f:'Premier Protein cafe latte',                  p:30},
@@ -132,7 +132,7 @@ const WEEK = [
     ],
     tip:'5th OT session of the week — incredible consistency. Treat dinner tonight, you earned it.'
   },
-  { day:'Friday',    date:'Apr 4',  short:'Fri\nApr 4',  hasOT:false, loc:'Weekend — Flexible',
+  { day:'Saturday',  date:'Apr 4',  short:'Sat\nApr 4',  hasOT:false, loc:'Weekend — Flexible',
     meals:[
       {n:'Breakfast',    f:'Besan ke chille fresh + chai',                p:14},
       {n:'Protein Shake',f:'Premier Protein cafe latte (optional)',       p:0, opt:true, optP:30},
@@ -142,7 +142,7 @@ const WEEK = [
     ],
     tip:'Enjoy your weekend. One treat meal is built in — have it guilt free.'
   },
-  { day:'Saturday',  date:'Apr 5',  short:'Sat\nApr 5',  hasOT:false, loc:'Weekend — Meal Prep Day',
+  { day:'Sunday',    date:'Apr 5',  short:'Sun\nApr 5',  hasOT:false, loc:'Weekend — Meal Prep Day',
     meals:[
       {n:'Breakfast',    f:'Masala oats or overnight oats',               p:18},
       {n:'Protein Shake',f:'Premier Protein cafe latte (optional)',       p:0, opt:true, optP:30},
