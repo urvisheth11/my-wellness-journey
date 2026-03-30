@@ -31,7 +31,7 @@
 (function () {
   'use strict';
 
-  const GS_URL     = 'https://script.google.com/macros/s/AKfycbyD47tlnoiiCgNd75tOFWAipxAV-D9tSYfp8oMBMc5m0AQ-FRoO1ovYTMPB0-2cG6IS3A/exec';
+  const GS_URL     = 'https://script.google.com/macros/s/AKfycbw17iGjXhlw4WIf9G-8lhoooLBrkKLmHHBwpcXATLbGFslD4FxUdrYmD-w0eKwEpxOPTA/exec';
   const LS_TS_KEY  = 'wellness_last_synced';
 
   /* ── Inject CSS ──────────────────────────────────────────── */
