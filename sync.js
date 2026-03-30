@@ -6,6 +6,7 @@
    APPS SCRIPT CODE (paste into script.google.com editor):
    ─────────────────────────────────────────────────────────────
    function doGet(e) {
+     if (!e || !e.parameter) return ContentService.createTextOutput('{}');
      var sheet = e.parameter.sheet;
      var ss    = SpreadsheetApp.getActiveSpreadsheet();
      var sh    = ss.getSheetByName(sheet);
@@ -16,17 +17,29 @@
    }
 
    function doPost(e) {
+     if (!e || !e.parameter) return ContentService.createTextOutput('NO_EVENT');
      var sheet = e.parameter.sheet;
      var data  = e.parameter.data;
-     var ss    = SpreadsheetApp.getActiveSpreadsheet();
-     var sh    = ss.getSheetByName(sheet) || ss.insertSheet(sheet);
+     if (!sheet || !data) return ContentService.createTextOutput('MISSING_PARAMS');
+     var ss = SpreadsheetApp.getActiveSpreadsheet();
+     var sh = ss.getSheetByName(sheet) || ss.insertSheet(sheet);
      sh.clearContents();
      sh.getRange(1, 1).setValue(data);
      return ContentService.createTextOutput('OK');
    }
+
+   // Use testPost() to verify from the editor without errors:
+   function testPost() {
+     var e = { parameter: { sheet: 'Test', data: '{"hello":"world"}' } };
+     var result = doPost(e);
+     Logger.log(result.getContent()); // should log: OK
+   }
    ─────────────────────────────────────────────────────────────
-   After pasting: click Deploy > Manage deployments >
-   edit your existing deployment > bump to a new version > Deploy.
+   IMPORTANT: Never click "Run" on doGet/doPost directly.
+   They only work via the web app URL.
+   To test from the editor, run testPost() instead.
+   After pasting: Deploy > Manage deployments > edit >
+   New version > Deploy.
    ============================================================= */
 
 (function () {
