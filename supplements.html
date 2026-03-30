@@ -392,6 +392,7 @@
 
 </div><!-- end page-container -->
 
+<script src="sync.js"></script>
 <script>
 // ──────────────────────────────────────────────────────────
 // DATA
@@ -449,6 +450,20 @@ function loadToday() {
 }
 function saveToday(arr) {
   localStorage.setItem(todayKey(), JSON.stringify(arr));
+  _pushSuppCloud();
+}
+
+function _pushSuppCloud() {
+  if (!window.GS) return;
+  const all = {};
+  for (let i = 0; i < localStorage.length; i++) {
+    const k = localStorage.key(i);
+    if (k && k.startsWith(PREFIX) && /\d{4}-\d{2}-\d{2}$/.test(k)) {
+      const dateStr = k.replace(PREFIX, '');
+      all[dateStr] = JSON.parse(localStorage.getItem(k));
+    }
+  }
+  GS.post('Supplements', all);
 }
 
 // ──────────────────────────────────────────────────────────
@@ -556,6 +571,7 @@ function toggleCalDay(d, btn) {
     btn.className = 'cal-day complete';
   }
   refreshStreak();
+  _pushSuppCloud();
 }
 
 function refreshCalendar() { buildCalendar(); }
@@ -600,6 +616,27 @@ buildChecklist();
 refreshChecklist();
 buildCalendar();
 refreshStreak();
+
+// ─── CLOUD SYNC LOAD ──────────────────────────────────────
+window.addEventListener('load', async () => {
+  if (!window.GS) return;
+  const cloud = await GS.get('Supplements');
+  if (!cloud || typeof cloud !== 'object') return;
+  let changed = false;
+  Object.keys(cloud).forEach(dateStr => {
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) return;
+    const key    = PREFIX + dateStr;
+    const remote = JSON.stringify(cloud[dateStr]);
+    if (localStorage.getItem(key) !== remote) {
+      localStorage.setItem(key, remote);
+      changed = true;
+    }
+  });
+  if (!changed) return;
+  refreshChecklist(loadToday());
+  buildCalendar();
+  refreshStreak();
+});
 </script>
 </body>
 </html>

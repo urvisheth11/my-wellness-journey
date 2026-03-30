@@ -81,6 +81,7 @@
 
 </div>
 
+<script src="sync.js"></script>
 <script>
 const WEEK = [
   { day:'Monday',    date:'Mar 30', short:'Mon\nMar 30', hasOT:true,  otTime:'7:30am',  loc:'WFH',
@@ -159,7 +160,17 @@ const MEAL_ICONS = ['🥣','🥤','🥗','🍎','🍽️'];
 
 // ─── STATE ───────────────────────────────────────────────────────────────
 function loadDay(d)   { return JSON.parse(localStorage.getItem('wellness_tracker_day_'+d) || '{}'); }
-function saveDay(d,s) { localStorage.setItem('wellness_tracker_day_'+d, JSON.stringify(s)); }
+function saveDay(d,s) {
+  localStorage.setItem('wellness_tracker_day_'+d, JSON.stringify(s));
+  _pushTrackerCloud();
+}
+
+function _pushTrackerCloud() {
+  if (!window.GS) return;
+  const all = {};
+  for (let i = 0; i < 7; i++) all['day'+i] = getDayState(i);
+  GS.post('Tracker', all);
+}
 
 function getDayState(d) {
   const s = loadDay(d);
@@ -392,6 +403,35 @@ document.getElementById('navToggle').addEventListener('click', () => {
 
 buildTabs();
 buildPanels();
+
+// ─── CLOUD SYNC LOAD ──────────────────────────────────────────────────────
+window.addEventListener('load', async () => {
+  if (!window.GS) return;
+  const cloud = await GS.get('Tracker');
+  if (!cloud || typeof cloud !== 'object') return;
+  let changed = false;
+  for (let i = 0; i < 7; i++) {
+    const key = 'day' + i;
+    if (!cloud[key]) continue;
+    const local = getDayState(i);
+    if (JSON.stringify(cloud[key]) !== JSON.stringify(local)) {
+      localStorage.setItem('wellness_tracker_day_' + i, JSON.stringify(cloud[key]));
+      changed = true;
+    }
+  }
+  if (!changed) return;
+  // Refresh UI for all 7 days
+  for (let i = 0; i < 7; i++) {
+    const s = getDayState(i);
+    updateDayUI(i, s.meals);
+    if (WEEK[i].hasOT) {
+      const ot = document.getElementById('otToggle-' + i);
+      if (ot) ot.checked = s.ot;
+    }
+    const notes = document.getElementById('notes-' + i);
+    if (notes) notes.value = s.notes;
+  }
+});
 
 // Open today's tab if within the week
 (function() {

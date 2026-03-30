@@ -65,6 +65,7 @@
   <div class="grocery-grid" id="groceryGrid"></div>
 </div>
 
+<script src="sync.js"></script>
 <script>
 const CATEGORIES = [
   {
@@ -182,7 +183,10 @@ const CATEGORIES = [
 const STORAGE_KEY = 'wellness_grocery';
 
 function loadChecked() { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); }
-function saveChecked(obj) { localStorage.setItem(STORAGE_KEY, JSON.stringify(obj)); }
+function saveChecked(obj) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(obj));
+  if (window.GS) GS.post('Grocery', obj);
+}
 
 function getItemKey(catIdx, itemIdx) { return `c${catIdx}_i${itemIdx}`; }
 
@@ -259,6 +263,18 @@ document.getElementById('navToggle').addEventListener('click', () => {
 });
 
 render();
+
+// ─── CLOUD SYNC LOAD ──────────────────────────────────────────────────────
+window.addEventListener('load', async () => {
+  if (!window.GS) return;
+  const cloud = await GS.get('Grocery');
+  if (!cloud || typeof cloud !== 'object') return;
+  const local = loadChecked();
+  if (JSON.stringify(cloud) !== JSON.stringify(local)) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(cloud));
+    render();
+  }
+});
 </script>
 </body>
 </html>

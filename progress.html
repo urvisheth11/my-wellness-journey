@@ -185,6 +185,7 @@
 
 <!-- Chart.js from cdnjs -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<script src="sync.js"></script>
 <script>
 const STORAGE_KEY = 'wellness_weights';
 const START_WEIGHT = 215;
@@ -194,7 +195,10 @@ let chart = null;
 
 // ─── DATA ────────────────────────────────────────────────────────────────
 function loadWeights() { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); }
-function saveWeights(arr) { localStorage.setItem(STORAGE_KEY, JSON.stringify(arr)); }
+function saveWeights(arr) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(arr));
+  if (window.GS) GS.post('Progress', arr);
+}
 
 // ─── ADD ENTRY ────────────────────────────────────────────────────────────
 function addEntry() {
@@ -396,6 +400,18 @@ document.getElementById('navToggle').addEventListener('click', () => {
 document.getElementById('weightDate').value = new Date().toISOString().split('T')[0];
 
 render();
+
+// ─── CLOUD SYNC LOAD ──────────────────────────────────────────────────────
+window.addEventListener('load', async () => {
+  if (!window.GS) return;
+  const cloud = await GS.get('Progress');
+  if (!Array.isArray(cloud) || !cloud.length) return;
+  const local = loadWeights();
+  if (JSON.stringify(cloud) !== JSON.stringify(local)) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(cloud));
+    render();
+  }
+});
 </script>
 </body>
 </html>
