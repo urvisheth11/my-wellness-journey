@@ -3,29 +3,30 @@
    My Wellness Journey
    =============================================================
 
-   APPS SCRIPT CODE (deploy at script.google.com):
+   APPS SCRIPT CODE (paste into script.google.com editor):
    ─────────────────────────────────────────────────────────────
    function doGet(e) {
-     var sheet  = e.parameter.sheet;
-     var ss     = SpreadsheetApp.getActiveSpreadsheet();
-     var sh     = ss.getSheetByName(sheet);
-     var val    = sh ? sh.getRange(1,1).getValue() : '{}';
+     var sheet = e.parameter.sheet;
+     var ss    = SpreadsheetApp.getActiveSpreadsheet();
+     var sh    = ss.getSheetByName(sheet);
+     var val   = sh ? sh.getRange(1,1).getValue() : '{}';
      return ContentService
        .createTextOutput(val || '{}')
        .setMimeType(ContentService.MimeType.JSON);
    }
 
    function doPost(e) {
-     var payload = JSON.parse(e.postData.contents);
-     var ss      = SpreadsheetApp.getActiveSpreadsheet();
-     var sh      = ss.getSheetByName(payload.sheet)
-                   || ss.insertSheet(payload.sheet);
+     var sheet = e.parameter.sheet;
+     var data  = e.parameter.data;
+     var ss    = SpreadsheetApp.getActiveSpreadsheet();
+     var sh    = ss.getSheetByName(sheet) || ss.insertSheet(sheet);
      sh.clearContents();
-     sh.getRange(1,1).setValue(JSON.stringify(payload.data));
+     sh.getRange(1, 1).setValue(data);
      return ContentService.createTextOutput('OK');
    }
    ─────────────────────────────────────────────────────────────
-   Deploy as: Execute as "Me", Access "Anyone"
+   After pasting: click Deploy > Manage deployments >
+   edit your existing deployment > bump to a new version > Deploy.
    ============================================================= */
 
 (function () {
@@ -115,15 +116,20 @@
     if (ms > 0) _hideTimer = setTimeout(() => ind.classList.remove('gs-show'), ms);
   }
 
-  /* ── POST to Google Sheets (no-cors) ─────────────────────── */
+  /* ── POST to Google Sheets (no-cors, URLSearchParams) ───── */
   async function post(sheet, data) {
     indicate('syncing', 'Saving to cloud…', 0);
     try {
+      // URLSearchParams sends as application/x-www-form-urlencoded
+      // Apps Script reads these as e.parameter.sheet / e.parameter.data
+      const body = new URLSearchParams();
+      body.append('sheet', sheet);
+      body.append('data',  JSON.stringify(data));
+
       await fetch(GS_URL, {
         method : 'POST',
         mode   : 'no-cors',
-        headers: { 'Content-Type': 'text/plain;charset=UTF-8' },
-        body   : JSON.stringify({ sheet, data }),
+        body   : body,
       });
       // no-cors gives opaque response — optimistically treat as success
       const now = new Date().toISOString();
