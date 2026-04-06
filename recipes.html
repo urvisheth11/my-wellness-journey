@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Wellness Journey — Recipe Library</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .search-bar { margin-bottom: 18px; }
+
+    .filter-bar {
+      display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px;
+    }
+    .filter-btn {
+      padding: 7px 16px; border-radius: 20px; font-size: 0.875rem;
+      font-weight: 600; cursor: pointer; border: 2px solid var(--teal);
+      background: transparent; color: var(--teal); transition: all 0.15s;
+      font-family: inherit;
+    }
+    .filter-btn:hover { background: var(--teal-light); }
+    .filter-btn.active { background: var(--teal); color: white; }
+
+    .results-count {
+      font-size: 0.875rem; color: var(--text-light); font-weight: 500;
+      margin-bottom: 18px;
+    }
+    .results-count strong { color: var(--teal); }
+
+    .recipe-grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+    @media (max-width: 1024px) { .recipe-grid-3 { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 600px)  { .recipe-grid-3 { grid-template-columns: 1fr; } }
+
+    .r-card {
+      background: white; border-radius: var(--border-radius);
+      border: 1px solid var(--gray-200); box-shadow: var(--shadow-sm);
+      overflow: hidden; transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .r-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
+
+    .r-head {
+      background: var(--teal); padding: 16px 18px; color: white;
+    }
+    .r-head h3 { font-size: 1rem; font-weight: 800; margin-bottom: 8px; line-height: 1.3; }
+    .r-badges { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 8px; }
+    .r-badge-cuisine { background: rgba(255,255,255,0.2); color: white; padding: 3px 9px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; }
+    .r-badge-protein  { background: rgba(83,74,183,0.35); color: white; padding: 3px 9px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; }
+    .r-badge-cal      { background: rgba(186,117,23,0.4); color: #ffe4a0; padding: 3px 9px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; }
+
+    .r-meta { font-size: 0.8125rem; color: rgba(255,255,255,0.85); display: flex; gap: 12px; flex-wrap: wrap; }
+
+    .r-body { padding: 0; }
+    .r-toggle-btn {
+      width: 100%; padding: 12px 18px; background: none; border: none;
+      border-top: 1px solid var(--gray-100); cursor: pointer; text-align: left;
+      font-size: 0.875rem; font-weight: 600; color: var(--teal);
+      display: flex; align-items: center; justify-content: space-between;
+      transition: background 0.15s; font-family: inherit;
+    }
+    .r-toggle-btn:hover { background: var(--teal-light); }
+    .r-expand { display: none; padding: 16px 18px; }
+    .r-expand.open { display: block; }
+
+    .r-sec-title {
+      font-size: 0.7rem; font-weight: 800; text-transform: uppercase;
+      letter-spacing: 0.07em; color: var(--text-light); margin-bottom: 8px; margin-top: 14px;
+    }
+    .r-sec-title:first-child { margin-top: 0; }
+
+    .r-expand ul { list-style: none; padding: 0; }
+    .r-expand ul li {
+      font-size: 0.875rem; padding: 4px 0; color: var(--text);
+      display: flex; align-items: baseline; gap: 7px;
+      border-bottom: 1px solid var(--gray-100);
+    }
+    .r-expand ul li:last-child { border-bottom: none; }
+    .r-expand ul li::before { content: '•'; color: var(--teal); font-weight: 900; flex-shrink: 0; }
+
+    .r-expand ol { padding-left: 18px; }
+    .r-expand ol li { font-size: 0.875rem; padding: 4px 0; color: var(--text); line-height: 1.5; }
+  </style>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="nav-inner">
+    <a class="nav-brand" href="index.html">🌿 My Wellness Journey</a>
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
+      <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+        <path d="M3 11h16M3 6h16M3 16h16"/>
+      </svg>
+    </button>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="index.html">Dashboard</a></li>
+      <li><a href="tracker.html">April Tracker</a></li>
+      <li><a href="meals.html">Meal Plan</a></li>
+      <li><a href="recipes.html" class="active">Recipes</a></li>
+      <li><a href="progress.html">Progress</a></li>
+      <li><a href="grocery.html">Grocery</a></li>
+      <li><a href="supplements.html">Supplements</a></li>
+    </ul>
+  </div>
+</nav>
+
+<div class="page-container">
+
+  <div class="page-header">
+    <h1 class="page-title">Recipe Library</h1>
+    <p class="page-subtitle">All April 2025 recipes — Indian, South Indian, Italian, Thai, and quick meals</p>
+  </div>
+
+  <!-- SEARCH -->
+  <div class="search-bar">
+    <input type="search" id="searchInput" class="form-control" placeholder="Search recipes…" style="font-size:1rem">
+  </div>
+
+  <!-- FILTERS -->
+  <div class="filter-bar" id="filterBar">
+    <button class="filter-btn active" data-filter="All">All</button>
+    <button class="filter-btn" data-filter="Indian">Indian</button>
+    <button class="filter-btn" data-filter="South Indian">South Indian</button>
+    <button class="filter-btn" data-filter="Italian">Italian</button>
+    <button class="filter-btn" data-filter="Thai">Thai</button>
+    <button class="filter-btn" data-filter="Quick">Quick</button>
+    <button class="filter-btn" data-filter="highProtein">High Protein (≥20g)</button>
+  </div>
+
+  <!-- RESULTS COUNT -->
+  <div class="results-count" id="resultsCount">Showing <strong>25</strong> of <strong>25</strong> recipes</div>
+
+  <!-- RECIPE GRID -->
+  <div class="recipe-grid-3" id="recipeGrid"></div>
+
+</div>
+
+<script src="data.js"></script>
+<script>
+const RECIPES = window.RECIPES || [];
+let activeFilter = 'All';
+let searchQuery  = '';
+
+/* ── Filter + search ─────────────────────────────────── */
+function filteredRecipes() {
+  return RECIPES.filter(r => {
+    const matchSearch = searchQuery === '' ||
+      r.name.toLowerCase().includes(searchQuery) ||
+      r.cuisine.toLowerCase().includes(searchQuery) ||
+      r.ingredients.some(i => i.toLowerCase().includes(searchQuery));
+
+    let matchFilter = true;
+    if (activeFilter === 'highProtein') {
+      matchFilter = r.highProtein || r.protein >= 20;
+    } else if (activeFilter !== 'All') {
+      matchFilter = r.cuisine === activeFilter;
+    }
+    return matchSearch && matchFilter;
+  });
+}
+
+/* ── Build grid ──────────────────────────────────────── */
+function buildGrid() {
+  const recipes = filteredRecipes();
+  const grid = document.getElementById('recipeGrid');
+  grid.innerHTML = '';
+
+  document.getElementById('resultsCount').innerHTML =
+    `Showing <strong>${recipes.length}</strong> of <strong>${RECIPES.length}</strong> recipes`;
+
+  recipes.forEach(r => {
+    const card = document.createElement('div');
+    card.className = 'r-card';
+
+    const hpBadge = (r.highProtein || r.protein >= 20) ? '<span class="r-badge-protein">⚡ High Protein</span>' : '';
+    const qmBadge = r.quickMake ? '<span class="r-badge-cuisine" style="background:rgba(255,255,255,0.15)">⚡ Quick</span>' : '';
+
+    card.innerHTML = `
+      <div class="r-head">
+        <h3>${r.name}</h3>
+        <div class="r-badges">
+          <span class="r-badge-cuisine">${r.cuisine}</span>
+          ${hpBadge}
+          <span class="r-badge-protein">${r.protein}g protein</span>
+          <span class="r-badge-cal">${r.cal} cal</span>
+        </div>
+        <div class="r-meta">
+          <span>⏱ Prep ${r.prepTime}min</span>
+          <span>🍳 Cook ${r.cookTime}min</span>
+        </div>
+      </div>
+      <div class="r-body">
+        <button class="r-toggle-btn" data-id="${r.id}">
+          <span>▼ View Recipe</span>
+          <span></span>
+        </button>
+        <div class="r-expand" id="rexpand-${r.id}">
+          <div class="r-sec-title">Ingredients</div>
+          <ul>${r.ingredients.map(i => `<li>${i}</li>`).join('')}</ul>
+          <div class="r-sec-title">Method</div>
+          <ol>${r.steps.map(s => `<li>${s}</li>`).join('')}</ol>
+        </div>
+      </div>
+    `;
+
+    card.querySelector('.r-toggle-btn').addEventListener('click', function() {
+      const exp = document.getElementById('rexpand-' + r.id);
+      const isOpen = exp.classList.toggle('open');
+      this.querySelector('span').textContent = isOpen ? '▲ Hide Recipe' : '▼ View Recipe';
+    });
+
+    grid.appendChild(card);
+  });
+}
+
+/* ── Filter buttons ──────────────────────────────────── */
+document.getElementById('filterBar').addEventListener('click', e => {
+  const btn = e.target.closest('.filter-btn');
+  if (!btn) return;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  activeFilter = btn.dataset.filter;
+  buildGrid();
+});
+
+/* ── Search input ────────────────────────────────────── */
+document.getElementById('searchInput').addEventListener('input', e => {
+  searchQuery = e.target.value.toLowerCase().trim();
+  buildGrid();
+});
+
+/* ── Nav toggle ──────────────────────────────────────── */
+document.getElementById('navToggle').addEventListener('click', () => {
+  document.getElementById('navLinks').classList.toggle('open');
+});
+
+buildGrid();
+</script>
+</body>
+</html>

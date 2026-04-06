@@ -14,27 +14,19 @@
       margin-bottom: 20px;
     }
     .supp-card {
-      background: white;
-      border: 2px solid var(--gray-200);
-      border-radius: 14px;
-      padding: 18px 18px 16px;
-      cursor: pointer;
+      background: white; border: 2px solid var(--gray-200); border-radius: 14px;
+      padding: 18px 18px 16px; cursor: pointer;
       transition: border-color 0.18s, background 0.18s, transform 0.15s, box-shadow 0.15s;
-      display: flex;
-      align-items: flex-start;
-      gap: 14px;
-      user-select: none;
-      -webkit-tap-highlight-color: transparent;
+      display: flex; align-items: flex-start; gap: 14px;
+      user-select: none; -webkit-tap-highlight-color: transparent;
     }
     .supp-card:hover { border-color: var(--teal); transform: translateY(-2px); box-shadow: var(--shadow); }
-    .supp-card.taken  { background: var(--teal-light); border-color: var(--teal); }
+    .supp-card.taken { background: var(--teal-light); border-color: var(--teal); }
     .supp-check {
       width: 30px; height: 30px; flex-shrink: 0; margin-top: 2px;
-      border: 2.5px solid var(--gray-300);
-      border-radius: 8px;
+      border: 2.5px solid var(--gray-300); border-radius: 8px;
       display: flex; align-items: center; justify-content: center;
-      font-size: 1.1rem; transition: all 0.18s;
-      background: white;
+      font-size: 1.1rem; transition: all 0.18s; background: white;
     }
     .supp-card.taken .supp-check { background: var(--teal); border-color: var(--teal); color: white; }
     .supp-info { flex: 1; min-width: 0; }
@@ -56,20 +48,17 @@
     .all-done.show { display: block; }
     .all-done p { margin-top: 6px; font-size: 0.875rem; font-weight: 400; opacity: 0.9; }
 
-    /* ── 30-DAY CALENDAR ─────────────────────────────────────── */
-    .calendar-grid {
-      display: flex; flex-wrap: wrap; gap: 8px; padding: 4px 0;
-    }
+    /* ── APRIL 2025 CALENDAR ─────────────────────────────────── */
+    .calendar-grid { display: flex; flex-wrap: wrap; gap: 8px; padding: 4px 0; }
     .cal-day {
       width: 42px; height: 42px; border-radius: 50%;
       display: flex; flex-direction: column; align-items: center; justify-content: center;
       font-size: 0.7rem; font-weight: 700;
       cursor: pointer; transition: all 0.18s;
-      border: 2px solid transparent;
-      position: relative;
+      border: 2px solid transparent; position: relative;
     }
-    .cal-day .cal-num  { line-height: 1; }
-    .cal-day .cal-mon  { font-size: 0.58rem; opacity: 0.7; margin-top: 1px; line-height: 1; }
+    .cal-day .cal-num { line-height: 1; }
+    .cal-day .cal-mon { font-size: 0.58rem; opacity: 0.7; margin-top: 1px; line-height: 1; }
 
     .cal-day.complete { background: var(--teal); color: white; border-color: var(--teal); }
     .cal-day.complete:hover { background: var(--teal-dark); }
@@ -80,8 +69,7 @@
     .cal-day.today    {
       border-color: var(--teal); color: var(--teal);
       box-shadow: 0 0 0 3px rgba(29,158,117,0.2);
-      animation: calPulse 2.2s ease-in-out infinite;
-      font-weight: 800;
+      animation: calPulse 2.2s ease-in-out infinite; font-weight: 800;
     }
     .cal-day.today.complete { color: white; }
     .cal-day.future   { background: var(--gray-50); color: var(--gray-300); border-color: var(--gray-100); cursor: default; }
@@ -96,51 +84,22 @@
     .leg-dot { width: 14px; height: 14px; border-radius: 50%; flex-shrink: 0; }
 
     /* ── SUPPLEMENT INFO CARDS ───────────────────────────────── */
-    .info-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-      gap: 18px;
-    }
-    .info-card {
-      background: white;
-      border: 1px solid var(--gray-200);
-      border-radius: 14px;
-      overflow: hidden;
-      box-shadow: var(--shadow-sm);
-      transition: transform 0.2s, box-shadow 0.2s;
-    }
+    .info-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 18px; }
+    .info-card { background: white; border: 1px solid var(--gray-200); border-radius: 14px; overflow: hidden; box-shadow: var(--shadow-sm); transition: transform 0.2s, box-shadow 0.2s; }
     .info-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
     .info-card-head { background: var(--teal); padding: 14px 18px; color: white; }
     .info-card-head h3 { font-size: 1rem; font-weight: 800; margin-bottom: 5px; line-height: 1.3; }
     .info-card-head .ic-dose { font-size: 0.8125rem; color: rgba(255,255,255,0.85); }
     .info-card-body { padding: 0; }
-    .info-row {
-      display: flex; gap: 10px; padding: 10px 18px;
-      border-bottom: 1px solid var(--gray-100); font-size: 0.875rem;
-    }
+    .info-row { display: flex; gap: 10px; padding: 10px 18px; border-bottom: 1px solid var(--gray-100); font-size: 0.875rem; }
     .info-row:last-child { border-bottom: none; }
-    .info-lbl {
-      font-weight: 700; color: var(--text-light); font-size: 0.7rem;
-      text-transform: uppercase; letter-spacing: 0.05em; min-width: 68px; padding-top: 2px;
-    }
-    .info-val { color: var(--text); line-height: 1.5; flex: 1; }
-    .info-note {
-      font-size: 0.8125rem; color: var(--amber);
-      background: var(--amber-light); border-radius: 0 0 13px 13px;
-      padding: 10px 18px; line-height: 1.45;
-      border-top: 1px solid rgba(186,117,23,0.15);
-    }
+    .info-lbl { font-weight: 700; color: var(--text-light); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em; min-width: 68px; padding-top: 2px; }
+    .info-val  { color: var(--text); line-height: 1.5; flex: 1; }
+    .info-note { font-size: 0.8125rem; color: var(--amber); background: var(--amber-light); border-radius: 0 0 13px 13px; padding: 10px 18px; line-height: 1.45; border-top: 1px solid rgba(186,117,23,0.15); }
     .info-note strong { color: var(--amber); }
 
     /* ── OB-GYN BANNER ───────────────────────────────────────── */
-    .ob-banner {
-      background: var(--amber-light);
-      border: 2px solid var(--amber);
-      border-radius: 14px;
-      padding: 20px 22px;
-      display: flex; align-items: flex-start; gap: 16px;
-      margin-bottom: 36px;
-    }
+    .ob-banner { background: var(--amber-light); border: 2px solid var(--amber); border-radius: 14px; padding: 20px 22px; display: flex; align-items: flex-start; gap: 16px; margin-bottom: 36px; }
     .ob-icon  { font-size: 2rem; flex-shrink: 0; line-height: 1; margin-top: 2px; }
     .ob-title { font-size: 1rem; font-weight: 800; color: var(--amber); margin-bottom: 6px; }
     .ob-text  { font-size: 0.9375rem; color: var(--text); line-height: 1.65; }
@@ -149,10 +108,7 @@
 
     /* ── SECTION HEADERS ─────────────────────────────────────── */
     .sec { margin-top: 44px; }
-    .sec-head {
-      display: flex; align-items: center; gap: 10px;
-      margin-bottom: 18px; flex-wrap: wrap;
-    }
+    .sec-head { display: flex; align-items: center; gap: 10px; margin-bottom: 18px; flex-wrap: wrap; }
     .sec-head h2 { font-size: 1.375rem; font-weight: 800; color: var(--text); letter-spacing: -0.025em; }
 
     @media (max-width: 600px) {
@@ -174,10 +130,11 @@
     </button>
     <ul class="nav-links" id="navLinks">
       <li><a href="index.html">Dashboard</a></li>
-      <li><a href="tracker.html">Week 1 Tracker</a></li>
+      <li><a href="tracker.html">April Tracker</a></li>
       <li><a href="meals.html">Meal Plan</a></li>
+      <li><a href="recipes.html">Recipes</a></li>
       <li><a href="progress.html">Progress</a></li>
-      <li><a href="grocery.html">Grocery List</a></li>
+      <li><a href="grocery.html">Grocery</a></li>
       <li><a href="supplements.html" class="active">Supplements</a></li>
     </ul>
   </div>
@@ -190,7 +147,7 @@
     <p class="page-subtitle">Your preconception supplement routine — check off every day to build a lasting habit</p>
   </div>
 
-  <!-- ── OB-GYN REMINDER BANNER ───────────────────────────── -->
+  <!-- OB-GYN REMINDER BANNER -->
   <div class="ob-banner">
     <div class="ob-icon">🩺</div>
     <div>
@@ -205,9 +162,7 @@
     </div>
   </div>
 
-  <!-- ══════════════════════════════════════════════════════
-       SECTION 1 — TODAY'S CHECKLIST
-  ══════════════════════════════════════════════════════ -->
+  <!-- SECTION 1 — TODAY'S CHECKLIST -->
   <div class="sec-head">
     <h2>💊 Today's Checklist</h2>
     <span class="badge badge-teal" id="todayDateBadge">—</span>
@@ -228,21 +183,17 @@
     </div>
   </div>
 
-  <!-- All done message -->
   <div class="all-done" id="allDoneMsg">
     🎉 All done for today! Your body thanks you.
     <p>Every capsule is an investment in your future. Keep this streak going!</p>
   </div>
 
-  <!-- Supplement cards -->
   <div class="supp-grid" id="suppGrid"></div>
 
-  <!-- ══════════════════════════════════════════════════════
-       SECTION 2 — 30-DAY HABIT CALENDAR
-  ══════════════════════════════════════════════════════ -->
+  <!-- SECTION 2 — APRIL 2025 CALENDAR -->
   <div class="sec">
     <div class="sec-head">
-      <h2>📅 30-Day Habit Calendar</h2>
+      <h2>📅 April 2025 Habit Calendar</h2>
       <span class="badge badge-purple" id="streakBadge">0 day streak</span>
     </div>
     <div class="card">
@@ -258,9 +209,7 @@
     </div>
   </div>
 
-  <!-- ══════════════════════════════════════════════════════
-       SECTION 3 — SUPPLEMENT INFO CARDS
-  ══════════════════════════════════════════════════════ -->
+  <!-- SECTION 3 — SUPPLEMENT INFO CARDS -->
   <div class="sec">
     <div class="sec-head">
       <h2>🔬 Supplement Details</h2>
@@ -276,11 +225,11 @@
         <div class="info-card-body">
           <div class="info-row"><span class="info-lbl">Why</span><span class="info-val">Most critical preconception supplement. Prevents neural tube defects and supports cell division.</span></div>
           <div class="info-row"><span class="info-lbl">Dose</span><span class="info-val">1 capsule daily — do not double up</span></div>
-          <div class="info-row"><span class="info-lbl">Best Brand</span><span class="info-val">Ritual Essential Prenatal <em>or</em> Garden of Life Prenatal</span></div>
+          <div class="info-row"><span class="info-lbl">Best Brand</span><span class="info-val">Ritual Essential Prenatal or Garden of Life Prenatal</span></div>
           <div class="info-row"><span class="info-lbl">Buy At</span><span class="info-val">Ritual.com, Target, Whole Foods, Amazon</span></div>
           <div class="info-row"><span class="info-lbl">Best Time</span><span class="info-val">Morning with breakfast — take consistently at the same time each day</span></div>
         </div>
-        <div class="info-note"><strong>⚠️ Note:</strong> Look for <em>methylfolate</em> (not folic acid) — it's the bioavailable form that works for all body types, including those with MTHFR variants.</div>
+        <div class="info-note"><strong>⚠️ Note:</strong> Look for methylfolate (not folic acid) — it's the bioavailable form that works for all body types, including those with MTHFR variants.</div>
       </div>
 
       <!-- 2. DHA -->
@@ -315,20 +264,20 @@
         <div class="info-note"><strong>⚠️ Important:</strong> Sublingual absorption bypasses the gut and is 3–10× more effective. Do not just swallow the tablet directly.</div>
       </div>
 
-      <!-- 4. Vitamin D3 -->
+      <!-- 4. Vitamin D3 + K2 Vegan (UPDATED) -->
       <div class="info-card">
         <div class="info-card-head">
-          <h3>Vitamin D3</h3>
-          <div class="ic-dose">💊 1,000–2,000 IU daily · Morning with food</div>
+          <h3>Vitamin D3 + K2 Vegan</h3>
+          <div class="ic-dose">💊 1 softgel morning with food</div>
         </div>
         <div class="info-card-body">
-          <div class="info-row"><span class="info-lbl">Why</span><span class="info-val">Nearly everyone is deficient indoors. Supports hormonal balance, thyroid health, and immune function.</span></div>
-          <div class="info-row"><span class="info-lbl">Dose</span><span class="info-val">1,000–2,000 IU daily (confirm exact dose with OB-GYN after blood test)</span></div>
-          <div class="info-row"><span class="info-lbl">Best Brand</span><span class="info-val">NatureWise Vitamin D3 2000 IU</span></div>
-          <div class="info-row"><span class="info-lbl">Buy At</span><span class="info-val">Amazon, Target, Costco (great value), Walmart</span></div>
-          <div class="info-row"><span class="info-lbl">Best Time</span><span class="info-val">Morning with breakfast — fat-soluble, needs food with fat to absorb</span></div>
+          <div class="info-row"><span class="info-lbl">Why</span><span class="info-val">Nearly everyone is deficient indoors. D3 supports hormonal balance, thyroid health, and immune function. K2 directs calcium to bones, not arteries.</span></div>
+          <div class="info-row"><span class="info-lbl">Dose</span><span class="info-val">2,000 IU D3 + K2 daily (confirm exact dose with OB-GYN after blood test)</span></div>
+          <div class="info-row"><span class="info-lbl">Best Brand</span><span class="info-val">FAMILI+ Vegan D3+K2 2000IU</span></div>
+          <div class="info-row"><span class="info-lbl">Buy At</span><span class="info-val">Amazon, iHerb, Whole Foods</span></div>
+          <div class="info-row"><span class="info-lbl">Best Time</span><span class="info-val">Morning with breakfast — fat-soluble, needs food with fat to absorb properly</span></div>
         </div>
-        <div class="info-note"><strong>💡 Note:</strong> Take D3 with K2 if possible (many combos exist) — K2 helps direct calcium to bones rather than arteries.</div>
+        <div class="info-note"><strong>💡 Note:</strong> The D3+K2 combo is ideal — K2 (MK-7 form) ensures vitamin D-driven calcium goes to your bones, not your arteries.</div>
       </div>
 
       <!-- 5. CoQ10 -->
@@ -344,7 +293,7 @@
           <div class="info-row"><span class="info-lbl">Buy At</span><span class="info-val">Costco (Qunol is excellent value), Amazon, CVS</span></div>
           <div class="info-row"><span class="info-lbl">Best Time</span><span class="info-val">With your largest meal of the day — fat-soluble, always take with food</span></div>
         </div>
-        <div class="info-note"><strong>💡 Note:</strong> Choose <em>ubiquinol</em> over ubiquinone — it's the active, reduced form and 2× more absorbable, especially over age 25.</div>
+        <div class="info-note"><strong>💡 Note:</strong> Choose ubiquinol over ubiquinone — it's the active, reduced form and 2× more absorbable, especially over age 25.</div>
       </div>
 
       <!-- 6. Premier Protein -->
@@ -360,15 +309,13 @@
           <div class="info-row"><span class="info-lbl">Buy At</span><span class="info-val">Costco (best price per case), Target, Amazon, Walmart</span></div>
           <div class="info-row"><span class="info-lbl">Best Time</span><span class="info-val">Mid-morning, between breakfast and lunch — keeps you satiated through OT days</span></div>
         </div>
-        <div class="info-note"><strong>💡 Note:</strong> On Friday &amp; Saturday this shake is optional — but tracking it here keeps the habit consistent even on flex days.</div>
+        <div class="info-note"><strong>💡 Note:</strong> On weekends this shake is optional — but tracking it here keeps the habit consistent even on flex days.</div>
       </div>
 
-    </div><!-- end info-grid -->
+    </div>
   </div>
 
-  <!-- ══════════════════════════════════════════════════════
-       SECTION 4 — OB-GYN REMINDER (bottom)
-  ══════════════════════════════════════════════════════ -->
+  <!-- SECTION 4 — OB-GYN REMINDER (bottom) -->
   <div class="sec">
     <div class="sec-head">
       <h2>🩺 OB-GYN Appointment</h2>
@@ -390,50 +337,20 @@
     </div>
   </div>
 
-</div><!-- end page-container -->
+</div>
 
 <script src="sync.js"></script>
 <script>
-// ──────────────────────────────────────────────────────────
-// DATA
-// ──────────────────────────────────────────────────────────
+/* ══════════════════════════════════════════════════════════
+   SUPPLEMENTS — inline script
+══════════════════════════════════════════════════════════ */
 const SUPPS = [
-  {
-    name: 'Prenatal Vitamin with Methylfolate',
-    dose: '1 capsule daily',
-    time: '☀️ Morning with food',
-    why:  'Most critical preconception supplement — prevents neural tube defects.',
-  },
-  {
-    name: 'Algae-Based DHA Omega-3',
-    dose: '1 capsule daily',
-    time: '☀️ Morning with food',
-    why:  'Plant-based omega-3 for egg quality and baby brain development.',
-  },
-  {
-    name: 'Vitamin B12 Sublingual',
-    dose: '1 tablet — dissolve under tongue',
-    time: '☀️ Morning, sublingual',
-    why:  'Vegetarian gap — B12 is almost exclusively in meat and eggs.',
-  },
-  {
-    name: 'Vitamin D3',
-    dose: '1,000–2,000 IU daily',
-    time: '☀️ Morning with food',
-    why:  'Almost everyone is deficient. Supports hormonal health and thyroid.',
-  },
-  {
-    name: 'CoQ10',
-    dose: '200mg daily',
-    time: '☀️ Morning or afternoon with food',
-    why:  'Antioxidant that supports egg quality and ovarian health.',
-  },
-  {
-    name: 'Premier Protein Café Latte Shake',
-    dose: '1 shake — 30g protein',
-    time: '🕙 Mid-morning',
-    why:  '30g protein daily anchor. Tracked as a core daily health habit.',
-  },
+  { name:'Prenatal Vitamin with Methylfolate', dose:'1 capsule daily',             time:'☀️ Morning with food',      why:'Most critical preconception supplement — prevents neural tube defects.' },
+  { name:'Algae-Based DHA Omega-3',            dose:'1 capsule daily',             time:'☀️ Morning with food',      why:'Plant-based omega-3 for egg quality and baby brain development.' },
+  { name:'Vitamin B12 Sublingual',             dose:'1 tablet — dissolve under tongue', time:'☀️ Morning, sublingual', why:'Vegetarian gap — B12 is almost exclusively in meat and eggs.' },
+  { name:'Vitamin D3 + K2 Vegan',              dose:'FAMILI+ Vegan D3+K2 2000IU, 1 softgel morning with food', time:'☀️ Morning with food', why:'Supports hormonal health, thyroid, and immune function. K2 directs calcium to bones.' },
+  { name:'CoQ10 (Ubiquinol)',                  dose:'200mg daily',                 time:'☀️ Morning or afternoon',   why:'Antioxidant that supports egg quality and ovarian health.' },
+  { name:'Premier Protein Café Latte Shake',   dose:'1 shake — 30g protein',       time:'🕙 Mid-morning',            why:'30g protein daily anchor. Tracked as a core daily health habit.' },
 ];
 
 const PREFIX = 'wellness_supplements_';
@@ -441,13 +358,11 @@ const PREFIX = 'wellness_supplements_';
 function todayKey() {
   return PREFIX + new Date().toISOString().split('T')[0];
 }
-function dateKey(d) {
-  return PREFIX + d.toISOString().split('T')[0];
-}
 
 function loadToday() {
   return JSON.parse(localStorage.getItem(todayKey()) || 'null') || new Array(6).fill(false);
 }
+
 function saveToday(arr) {
   localStorage.setItem(todayKey(), JSON.stringify(arr));
   _pushSuppCloud();
@@ -459,16 +374,13 @@ function _pushSuppCloud() {
   for (let i = 0; i < localStorage.length; i++) {
     const k = localStorage.key(i);
     if (k && k.startsWith(PREFIX) && /\d{4}-\d{2}-\d{2}$/.test(k)) {
-      const dateStr = k.replace(PREFIX, '');
-      all[dateStr] = JSON.parse(localStorage.getItem(k));
+      all[k.replace(PREFIX, '')] = JSON.parse(localStorage.getItem(k));
     }
   }
   GS.post('Supplements', all);
 }
 
-// ──────────────────────────────────────────────────────────
-// SECTION 1 — CHECKLIST
-// ──────────────────────────────────────────────────────────
+/* ── Section 1 — Checklist ───────────────────────────── */
 function buildChecklist() {
   const grid = document.getElementById('suppGrid');
   grid.innerHTML = '';
@@ -516,26 +428,28 @@ function refreshChecklist(arr) {
   });
 }
 
-// ──────────────────────────────────────────────────────────
-// SECTION 2 — 30-DAY CALENDAR
-// ──────────────────────────────────────────────────────────
-const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-
+/* ── Section 2 — April 2025 Calendar (fixed Apr 1–30) ─ */
 function buildCalendar() {
-  const grid   = document.getElementById('calGrid');
+  const grid = document.getElementById('calGrid');
   grid.innerHTML = '';
-  const today  = new Date();
-  today.setHours(0,0,0,0);
 
-  for (let offset = -29; offset <= 0; offset++) {
-    const d = new Date(today);
-    d.setDate(today.getDate() + offset);
-    const key  = PREFIX + d.toISOString().split('T')[0];
+  const now = new Date();
+  now.setHours(0,0,0,0);
+  const todayStr = now.toISOString().split('T')[0];
+
+  for (let day = 1; day <= 30; day++) {
+    const dateStr  = '2025-04-' + String(day).padStart(2,'0');
+    const dayDate  = new Date(dateStr + 'T12:00:00');
+    const isToday  = dateStr === todayStr;
+    const isFuture = dateStr > todayStr;
+
+    const key  = PREFIX + dateStr;
     const data = JSON.parse(localStorage.getItem(key) || 'null');
-    const isToday = offset === 0;
 
     let cls = 'cal-day ';
-    if (isToday) {
+    if (isFuture) {
+      cls += 'future';
+    } else if (isToday) {
       const arr   = data || new Array(6).fill(false);
       const count = arr.filter(Boolean).length;
       cls += 'today ' + (count === 6 ? 'complete' : '');
@@ -543,23 +457,23 @@ function buildCalendar() {
       cls += 'missed';
     } else {
       const count = data.filter(Boolean).length;
-      cls += count === 6 ? 'complete' : 'partial';
+      cls += count === 6 ? 'complete' : count > 0 ? 'partial' : 'missed';
     }
 
     const btn = document.createElement('div');
     btn.className = cls.trim();
-    btn.title = d.toLocaleDateString('en-US', { weekday:'short', month:'short', day:'numeric' });
-    btn.innerHTML = `<span class="cal-num">${d.getDate()}</span><span class="cal-mon">${MONTHS[d.getMonth()]}</span>`;
+    btn.title = dayDate.toLocaleDateString('en-US', { weekday:'short', month:'short', day:'numeric' });
+    btn.innerHTML = `<span class="cal-num">${day}</span><span class="cal-mon">Apr</span>`;
 
-    if (!isToday) {
-      btn.addEventListener('click', () => toggleCalDay(d, btn));
+    if (!isToday && !isFuture) {
+      btn.addEventListener('click', () => toggleCalDay(dateStr, btn));
     }
     grid.appendChild(btn);
   }
 }
 
-function toggleCalDay(d, btn) {
-  const key  = PREFIX + d.toISOString().split('T')[0];
+function toggleCalDay(dateStr, btn) {
+  const key  = PREFIX + dateStr;
   const data = JSON.parse(localStorage.getItem(key) || 'null');
   const isComplete = data && data.filter(Boolean).length === 6;
 
@@ -576,9 +490,7 @@ function toggleCalDay(d, btn) {
 
 function refreshCalendar() { buildCalendar(); }
 
-// ──────────────────────────────────────────────────────────
-// STREAK CALCULATOR
-// ──────────────────────────────────────────────────────────
+/* ── Streak ──────────────────────────────────────────── */
 function refreshStreak() {
   const today = new Date();
   today.setHours(0,0,0,0);
@@ -600,14 +512,11 @@ function refreshStreak() {
   badge.textContent = streak + ' day streak' + (streak >= 7 ? ' 🔥' : '');
 }
 
-// ──────────────────────────────────────────────────────────
-// INIT
-// ──────────────────────────────────────────────────────────
+/* ── INIT ─────────────────────────────────────────────── */
 document.getElementById('navToggle').addEventListener('click', () => {
   document.getElementById('navLinks').classList.toggle('open');
 });
 
-// Set today's date badge
 const now  = new Date();
 const opts = { weekday:'long', month:'long', day:'numeric' };
 document.getElementById('todayDateBadge').textContent = now.toLocaleDateString('en-US', opts);
@@ -617,7 +526,7 @@ refreshChecklist();
 buildCalendar();
 refreshStreak();
 
-// ─── CLOUD SYNC LOAD ──────────────────────────────────────
+/* ── Cloud Sync Load ─────────────────────────────────── */
 window.addEventListener('load', async () => {
   if (!window.GS) return;
   const cloud = await GS.get('Supplements');
