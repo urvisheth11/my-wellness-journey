@@ -1,6 +1,6 @@
 /* =============================================================
-   data.js — April 2025 meal data + recipe library
-   My Wellness Journey
+   data.js — April 2026 meal data + recipe library
+   My Wellness Journey  (tracking Apr 6 – Apr 30, 2026)
    ============================================================= */
 
 (function () {
@@ -84,42 +84,38 @@
     30: { type: 'Dinner', food: 'Palak paneer lite + roti + brown rice',                               protein: 26, cal: 460 },
   };
 
-  /* ── April 2025 schedule ────────────────────────────────── */
-  // dow: Tue=2, Wed=3, Thu=4, Fri=5, Sat=6, Sun=0, Mon=1
+  /* ── April 2026 schedule (tracking starts Apr 6, Monday) ── */
+  // dow: Mon=1, Tue=2, Wed=3, Thu=4, Fri=5, Sat=6, Sun=0
   // Office: Tue/Wed/Thu, WFH: Mon/Fri, Weekend: Sat/Sun
   // OT: Mon/Fri=7:30am, Tue/Wed/Thu=4:30pm, Sat/Sun=none
+  // April 1 2026 = Wednesday; tracking days 1-25 = Apr 6-30
   const APRIL_DAYS_META = [
-    // date        dayNum dow   short       week office wfh  wknd  ot    otTime
-    ['2025-04-01',  1, 'Tue', 'Apr 1',  1, true,  false, false, true,  '4:30pm'],
-    ['2025-04-02',  2, 'Wed', 'Apr 2',  1, true,  false, false, true,  '4:30pm'],
-    ['2025-04-03',  3, 'Thu', 'Apr 3',  1, true,  false, false, true,  '4:30pm'],
-    ['2025-04-04',  4, 'Fri', 'Apr 4',  1, false, true,  false, true,  '7:30am'],
-    ['2025-04-05',  5, 'Sat', 'Apr 5',  1, false, false, true,  false, null],
-    ['2025-04-06',  6, 'Sun', 'Apr 6',  1, false, false, true,  false, null],
-    ['2025-04-07',  7, 'Mon', 'Apr 7',  2, false, true,  false, true,  '7:30am'],
-    ['2025-04-08',  8, 'Tue', 'Apr 8',  2, true,  false, false, true,  '4:30pm'],
-    ['2025-04-09',  9, 'Wed', 'Apr 9',  2, true,  false, false, true,  '4:30pm'],
-    ['2025-04-10', 10, 'Thu', 'Apr 10', 2, true,  false, false, true,  '4:30pm'],
-    ['2025-04-11', 11, 'Fri', 'Apr 11', 2, false, true,  false, true,  '7:30am'],
-    ['2025-04-12', 12, 'Sat', 'Apr 12', 2, false, false, true,  false, null],
-    ['2025-04-13', 13, 'Sun', 'Apr 13', 2, false, false, true,  false, null],
-    ['2025-04-14', 14, 'Mon', 'Apr 14', 3, false, true,  false, true,  '7:30am'],
-    ['2025-04-15', 15, 'Tue', 'Apr 15', 3, true,  false, false, true,  '4:30pm'],
-    ['2025-04-16', 16, 'Wed', 'Apr 16', 3, true,  false, false, true,  '4:30pm'],
-    ['2025-04-17', 17, 'Thu', 'Apr 17', 3, true,  false, false, true,  '4:30pm'],
-    ['2025-04-18', 18, 'Fri', 'Apr 18', 3, false, true,  false, true,  '7:30am'],
-    ['2025-04-19', 19, 'Sat', 'Apr 19', 3, false, false, true,  false, null],
-    ['2025-04-20', 20, 'Sun', 'Apr 20', 3, false, false, true,  false, null],
-    ['2025-04-21', 21, 'Mon', 'Apr 21', 4, false, true,  false, true,  '7:30am'],
-    ['2025-04-22', 22, 'Tue', 'Apr 22', 4, true,  false, false, true,  '4:30pm'],
-    ['2025-04-23', 23, 'Wed', 'Apr 23', 4, true,  false, false, true,  '4:30pm'],
-    ['2025-04-24', 24, 'Thu', 'Apr 24', 4, true,  false, false, true,  '4:30pm'],
-    ['2025-04-25', 25, 'Fri', 'Apr 25', 4, false, true,  false, true,  '7:30am'],
-    ['2025-04-26', 26, 'Sat', 'Apr 26', 4, false, false, true,  false, null],
-    ['2025-04-27', 27, 'Sun', 'Apr 27', 4, false, false, true,  false, null],
-    ['2025-04-28', 28, 'Mon', 'Apr 28', 4, false, true,  false, true,  '7:30am'],
-    ['2025-04-29', 29, 'Tue', 'Apr 29', 4, true,  false, false, true,  '4:30pm'],
-    ['2025-04-30', 30, 'Wed', 'Apr 30', 4, true,  false, false, true,  '4:30pm'],
+    // date         dayNum dow   short        week  office  wfh    wknd   ot     otTime
+    ['2026-04-06',  1, 'Mon', 'Apr 6',   1, false, true,  false, true,  '7:30am'],
+    ['2026-04-07',  2, 'Tue', 'Apr 7',   1, true,  false, false, true,  '4:30pm'],
+    ['2026-04-08',  3, 'Wed', 'Apr 8',   1, true,  false, false, true,  '4:30pm'],
+    ['2026-04-09',  4, 'Thu', 'Apr 9',   1, true,  false, false, true,  '4:30pm'],
+    ['2026-04-10',  5, 'Fri', 'Apr 10',  1, false, true,  false, true,  '7:30am'],
+    ['2026-04-11',  6, 'Sat', 'Apr 11',  1, false, false, true,  false, null],
+    ['2026-04-12',  7, 'Sun', 'Apr 12',  1, false, false, true,  false, null],
+    ['2026-04-13',  8, 'Mon', 'Apr 13',  2, false, true,  false, true,  '7:30am'],
+    ['2026-04-14',  9, 'Tue', 'Apr 14',  2, true,  false, false, true,  '4:30pm'],
+    ['2026-04-15', 10, 'Wed', 'Apr 15',  2, true,  false, false, true,  '4:30pm'],
+    ['2026-04-16', 11, 'Thu', 'Apr 16',  2, true,  false, false, true,  '4:30pm'],
+    ['2026-04-17', 12, 'Fri', 'Apr 17',  2, false, true,  false, true,  '7:30am'],
+    ['2026-04-18', 13, 'Sat', 'Apr 18',  2, false, false, true,  false, null],
+    ['2026-04-19', 14, 'Sun', 'Apr 19',  2, false, false, true,  false, null],
+    ['2026-04-20', 15, 'Mon', 'Apr 20',  3, false, true,  false, true,  '7:30am'],
+    ['2026-04-21', 16, 'Tue', 'Apr 21',  3, true,  false, false, true,  '4:30pm'],
+    ['2026-04-22', 17, 'Wed', 'Apr 22',  3, true,  false, false, true,  '4:30pm'],
+    ['2026-04-23', 18, 'Thu', 'Apr 23',  3, true,  false, false, true,  '4:30pm'],
+    ['2026-04-24', 19, 'Fri', 'Apr 24',  3, false, true,  false, true,  '7:30am'],
+    ['2026-04-25', 20, 'Sat', 'Apr 25',  3, false, false, true,  false, null],
+    ['2026-04-26', 21, 'Sun', 'Apr 26',  3, false, false, true,  false, null],
+    ['2026-04-27', 22, 'Mon', 'Apr 27',  4, false, true,  false, true,  '7:30am'],
+    ['2026-04-28', 23, 'Tue', 'Apr 28',  4, true,  false, false, true,  '4:30pm'],
+    ['2026-04-29', 24, 'Wed', 'Apr 29',  4, true,  false, false, true,  '4:30pm'],
+    ['2026-04-30', 25, 'Thu', 'Apr 30',  4, true,  false, false, true,  '4:30pm'],
   ];
 
   const APRIL_DAYS = APRIL_DAYS_META.map(([date, dayNum, dow, short, week, isOffice, isWFH, isWeekend, hasOT, otTime]) => {

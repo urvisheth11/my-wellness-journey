@@ -107,8 +107,8 @@
   <!-- HERO BANNER -->
   <div class="hero">
     <div class="hero-date" id="heroDayDate"></div>
-    <div class="hero-title">April 2025 · Wellness Journey 💪</div>
-    <div class="hero-sub">Preconception health journey &nbsp;·&nbsp; Orangetheory strong &nbsp;·&nbsp; 30 days of intention</div>
+    <div class="hero-title">April 2026 · Wellness Journey 💪</div>
+    <div class="hero-sub">Preconception health journey &nbsp;·&nbsp; Orangetheory strong &nbsp;·&nbsp; 25 days of intention</div>
     <div class="hero-progress">
       <div class="hero-progress-label" id="heroProgressLabel">Month progress: — of 30 days complete</div>
       <div class="hero-progress-track">
@@ -121,11 +121,11 @@
   <div class="stats-grid">
     <div class="stat-card">
       <div class="stat-value" id="statDays">0</div>
-      <div class="stat-label">Days Complete / 30</div>
+      <div class="stat-label">Days Complete / 25</div>
     </div>
     <div class="stat-card stat-purple">
       <div class="stat-value" id="statMeals">0</div>
-      <div class="stat-label">Meals Checked / 150</div>
+      <div class="stat-label">Meals Checked / 125</div>
     </div>
     <div class="stat-card stat-amber">
       <div class="stat-value" id="statOT">0</div>
@@ -144,7 +144,7 @@
     <div class="card">
       <div class="card-header">
         <span class="card-title">🍽️ Today's Meals</span>
-        <span class="badge badge-teal" id="todayBadge">April 2025</span>
+        <span class="badge badge-teal" id="todayBadge">April 2026</span>
       </div>
       <div class="card-body" id="todayBody">
         <div style="text-align:center;padding:36px 20px;color:var(--text-light)">
@@ -271,7 +271,7 @@ function init() {
   document.getElementById('statMeals').textContent  = mealsChecked;
   document.getElementById('statOT').textContent     = otSessions;
 
-  const daysInMonth = 30;
+  const daysInMonth = 25;
   document.getElementById('heroProgressFill').style.width  = (daysComplete/daysInMonth*100) + '%';
   document.getElementById('heroProgressLabel').textContent = `Month progress: ${daysComplete} of ${daysInMonth} days complete`;
 
