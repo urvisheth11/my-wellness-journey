@@ -181,6 +181,16 @@
               <div style="font-size:0.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--amber);margin-top:3px">To 190 Goal</div>
             </div>
           </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+            <div style="background:var(--red-light);border-radius:8px;padding:14px;text-align:center;border:1px solid rgba(239,68,68,.15)">
+              <div style="font-size:1.5rem;font-weight:800;color:var(--red)" id="statToHealthy">62</div>
+              <div style="font-size:0.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--red);margin-top:3px">To Healthy (153 lbs)</div>
+            </div>
+            <div style="background:var(--teal-light);border-radius:8px;padding:14px;text-align:center;border:1px solid rgba(29,158,117,.15)">
+              <div style="font-size:1.5rem;font-weight:800;color:var(--teal)" id="statBMISmall">33.7</div>
+              <div style="font-size:0.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--teal-dark);margin-top:3px">Current BMI</div>
+            </div>
+          </div>
           <div>
             <div class="progress-label">
               <span style="font-weight:600">Progress to 190 lbs</span>
@@ -333,7 +343,7 @@
   ══════════════════════════════════════════════════════ -->
   <div class="card" style="margin-top:24px;">
     <div class="card-header">
-      <span class="card-title">📅 April 2025 Summary</span>
+      <span class="card-title">📅 April 2026 Summary</span>
       <span class="badge badge-teal">From Tracker</span>
     </div>
     <div class="card-body">
@@ -498,10 +508,12 @@ function render() {
   const totalRange = START_WEIGHT - GOAL_WEIGHT;
   const pct = Math.min(100, Math.max(0, ((START_WEIGHT - current) / totalRange * 100))).toFixed(0);
 
-  document.getElementById('statCurrent').textContent = current;
-  document.getElementById('statLost').textContent    = lost;
-  document.getElementById('statToGo').textContent    = toGo;
-  document.getElementById('pctLbl').textContent      = pct + '%';
+  const toHealthy = Math.max(0, current - 153).toFixed(1);
+  document.getElementById('statCurrent').textContent   = current;
+  document.getElementById('statLost').textContent      = lost;
+  document.getElementById('statToGo').textContent      = toGo;
+  document.getElementById('statToHealthy').textContent = toHealthy;
+  document.getElementById('pctLbl').textContent        = pct + '%';
   document.getElementById('goalProgressFill').style.width = pct + '%';
 
   const badge = document.getElementById('entryCountBadge');
@@ -511,8 +523,9 @@ function render() {
   // BMI
   const bmi = calcBMI(current);
   const cat = bmiCategory(bmi);
-  document.getElementById('bmiValue').textContent   = bmi;
-  document.getElementById('bmiCurrent').textContent = bmi;
+  document.getElementById('bmiValue').textContent    = bmi;
+  document.getElementById('bmiCurrent').textContent  = bmi;
+  if (document.getElementById('statBMISmall')) document.getElementById('statBMISmall').textContent = bmi;
   const bmiCatEl = document.getElementById('bmiCatBadge');
   bmiCatEl.textContent = cat.label;
   bmiCatEl.className   = 'bmi-cat ' + cat.cls;
@@ -525,7 +538,7 @@ function render() {
   updateAprilSummary();
 
   // Chart
-  const chartEntries = [{ date: '2025-03-30', weight: START_WEIGHT }, ...weights];
+  const chartEntries = weights.length ? weights : [{ date: '2026-04-06', weight: START_WEIGHT }];
   const labels   = chartEntries.map(e => formatDateLabel(e.date));
   const dataVals = chartEntries.map(e => e.weight);
   const goalLine = chartEntries.map(() => GOAL_WEIGHT);
@@ -632,6 +645,13 @@ document.getElementById('navToggle').addEventListener('click', () => {
 });
 
 document.getElementById('weightDate').value = new Date().toISOString().split('T')[0];
+
+// Pre-populate starting weight if no data exists
+if (!loadWeights().length) {
+  const initial = [{ date: '2026-04-06', weight: 215 }];
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(initial));
+}
+
 render();
 
 /* ── Cloud Sync Load ─────────────────────────────────── */

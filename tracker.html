@@ -209,10 +209,10 @@
 <script src="data.js"></script>
 <script>
 /* ══════════════════════════════════════════════════════════
-   APRIL 2026 TRACKER — inline script (Apr 6–30)
+   APRIL 2026 TRACKER — Apr 6–30 (25 days)
 ══════════════════════════════════════════════════════════ */
 
-const DAYS   = window.APRIL_DATA.days; // 30 objects
+const DAYS   = window.APRIL_DATA.days; // 25 objects
 const PREFIX = 'wellness_april_';
 const MEAL_ICONS = ['🥣','🥤','🥗','🍎','🍽️'];
 
@@ -241,12 +241,7 @@ const DAILY_TIPS = [
   "Quinoa bowls batch cooked on Sunday = effortless office lunches all week.",
   "Your gut flora loves the diversity in this meal plan — feed it well.",
   "Protein at every meal keeps blood sugar stable and cravings at bay.",
-  "The best workout is the one you actually show up to. OT four times a week is incredible.",
-  "Dal, lentils, paneer — you're getting complete nutrition from plant and dairy sources.",
-  "Celebrate the non-scale victories: more energy, clearer skin, better sleep.",
-  "Every check in the meal tracker is a vote for who you're becoming.",
-  "Your future self is grateful for every healthy choice you make today.",
-  "Finish April strong — 30 days, 150 meals, countless small victories.",
+  "The best workout is the one you actually show up to. OT is incredible.",
 ];
 
 /* ── localStorage helpers ─────────────────────────────── */
@@ -297,311 +292,315 @@ function calcMonthlyStats() {
 
   document.getElementById('msDaysComplete').textContent = daysComplete;
   document.getElementById('msMealsChecked').textContent = mealsChecked;
-  document.getElementById('msOTDone').textContent        = otDone;
-  document.getElementById('msStreak').textContent        = streak;
+  document.getElementById('msOTDone').textContent       = otDone;
+  document.getElementById('msStreak').textContent       = streak;
 }
 
-/* ── Calendar ─────────────────────────────────────────── */
+/* ── Build Calendar ───────────────────────────────────── */
 let selectedDate = null;
 
 function buildCalendar() {
-  const grid = document.getElementById('calGrid');
+  const grid  = document.getElementById('calGrid');
   grid.innerHTML = '';
   const today = todayStr();
 
-  // April 1, 2026 is a Wednesday → col index 3 (0=Sun)
-  // Add 3 empty cells first (Sun/Mon/Tue columns before Apr 1)
-  for (let i = 0; i < 3; i++) {
+  // April 2026: April 1 = Wednesday (index 3 in Sun-start grid)
+  // Add 3 empty cells for Sun/Mon/Tue (Apr 1 is Wed)
+  // Tracking days are Apr 6–30 only
+  // April 1 = Wed (col 3), so offset = 3
+  const APRIL_1_OFFSET = 3; // Wednesday in Sun-Mon-Tue-Wed-Thu-Fri-Sat grid
+
+  // Fill pre-April or Apr 1-5 as pre-period or empty
+  for (let i = 0; i < APRIL_1_OFFSET; i++) {
     const cell = document.createElement('div');
     cell.className = 'cal-cell';
     const btn = document.createElement('button');
     btn.className = 'cal-day-btn cd-empty';
-    btn.disabled = true;
+    btn.textContent = '';
     cell.appendChild(btn);
     grid.appendChild(cell);
   }
 
-  // Apr 1–5 pre-tracking placeholder cells (shown but not clickable)
+  // Apr 1-5: pre-period (not tracked)
   for (let d = 1; d <= 5; d++) {
     const cell = document.createElement('div');
     cell.className = 'cal-cell';
     const btn = document.createElement('button');
     btn.className = 'cal-day-btn cd-pre-period';
     btn.textContent = d;
-    btn.disabled = true;
-    btn.title = 'Apr ' + d + ' — pre-tracking';
+    btn.title = 'Apr ' + d + ' — tracking starts Apr 6';
     cell.appendChild(btn);
     grid.appendChild(cell);
   }
 
-  // Apr 6–30 tracking days (25 days)
-  DAYS.forEach(d => {
+  // Apr 6-30: tracked days
+  DAYS.forEach(dayObj => {
     const cell = document.createElement('div');
     cell.className = 'cal-cell';
 
     const btn = document.createElement('button');
-    const s = loadDay(d.date);
-    const mc = s.meals.filter(Boolean).length;
-    const past = isPastOrToday(d.date);
+    const dayNum = dayObj.date.split('-')[2]; // "06" to "30"
+    btn.textContent = parseInt(dayNum, 10); // remove leading zero
 
-    let cls = 'cal-day-btn';
-    if (!past) {
-      cls += ' cd-future';
-    } else if (mc === 5) {
-      cls += ' cd-complete';
-    } else if (mc >= 1) {
-      cls += ' cd-partial';
+    const isToday  = dayObj.date === today;
+    const isPast   = dayObj.date < today;
+    const isFuture = dayObj.date > today;
+
+    if (isFuture) {
+      btn.className = 'cal-day-btn cd-future';
     } else {
-      cls += ' cd-no-data';
-    }
-    if (d.date === today) cls += ' cd-today';
-    if (d.date === selectedDate) cls += ' cd-selected';
+      const s  = loadDay(dayObj.date);
+      const mc = s.meals.filter(Boolean).length;
+      if (mc === 5) btn.className = 'cal-day-btn cd-complete';
+      else if (mc > 0) btn.className = 'cal-day-btn cd-partial';
+      else btn.className = 'cal-day-btn cd-no-data';
 
-    btn.className = cls;
-    btn.textContent = parseInt(d.date.slice(8)); // shows 6, 7 … 30
-    btn.title = d.short + ' · ' + (d.isOffice ? 'Office' : d.isWFH ? 'WFH' : 'Weekend');
-
-    if (past) {
-      btn.addEventListener('click', () => selectDay(d.date));
-    } else {
-      btn.disabled = true;
+      btn.addEventListener('click', () => openDay(dayObj.date));
     }
 
+    if (isToday)  btn.classList.add('cd-today');
+    if (dayObj.date === selectedDate) btn.classList.add('cd-selected');
+
+    btn.dataset.date = dayObj.date;
     cell.appendChild(btn);
     grid.appendChild(cell);
   });
-
-  // Fill remaining cells to complete 5 rows (3+5+25+2 = 35)
-  for (let i = 0; i < 2; i++) {
-    const cell = document.createElement('div');
-    cell.className = 'cal-cell';
-    const btn = document.createElement('button');
-    btn.className = 'cal-day-btn cd-empty';
-    btn.disabled = true;
-    cell.appendChild(btn);
-    grid.appendChild(cell);
-  }
 }
 
-function selectDay(date) {
+/* ── Open day detail panel ────────────────────────────── */
+function openDay(date) {
   selectedDate = date;
-  buildCalendar();
-  renderDetailPanel(date);
-  document.getElementById('detailPanel').classList.add('show');
-  document.getElementById('detailPanel').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-}
+  buildCalendar(); // refresh selection highlight
 
-/* ── Detail Panel ─────────────────────────────────────── */
-function renderDetailPanel(date) {
-  const dayData = DAYS.find(d => d.date === date);
-  if (!dayData) return;
-  const state = loadDay(date);
-  const mc = state.meals.filter(Boolean).length;
-  const protein = dayData.meals.reduce((sum, m, i) => sum + (state.meals[i] ? m.protein : 0), 0);
-  const totalProtein = dayData.meals.reduce((s, m) => s + m.protein, 0);
-  const allDone = mc === 5;
+  const dayObj = DAYS.find(d => d.date === date);
+  if (!dayObj) return;
 
-  // Build header text
-  const DOW_FULL = { Mon:'Monday', Tue:'Tuesday', Wed:'Wednesday', Thu:'Thursday', Fri:'Friday', Sat:'Saturday', Sun:'Sunday' };
-  const MONTHS_FULL = ['January','February','March','April','May','June','July','August','September','October','November','December'];
-  const dObj = new Date(date + 'T12:00:00');
-  const calDayNum = parseInt(dayData.date.slice(8));
-  const headerDate = DOW_FULL[dayData.dow] + ', April ' + calDayNum;
-  const locStr = dayData.isOffice ? 'Office' : dayData.isWFH ? 'WFH' : 'Weekend';
-  const otStr = dayData.hasOT ? ' · OT @ ' + dayData.otTime : '';
+  const state  = loadDay(date);
+  const today  = todayStr();
+  const isPast = date <= today;
 
-  const tip = DAILY_TIPS[(dayData.dayNum - 1) % DAILY_TIPS.length];
+  const mc  = state.meals.filter(Boolean).length;
+  const ttl = dayObj.meals.reduce((s,m) => s + (m.protein||0), 0);
+  const pc  = state.meals.reduce((s,_,i) => s + (state.meals[i] ? (dayObj.meals[i].protein||0) : 0), 0);
+  const cal = state.meals.reduce((s,_,i) => s + (state.meals[i] ? (dayObj.meals[i].cal||0) : 0), 0);
 
-  const body = document.getElementById('detailBody');
-  body.innerHTML = `
+  // Day type label
+  let typeLabel = '';
+  if (dayObj.isOffice) typeLabel = '🏢 Office day';
+  if (dayObj.isWFH)    typeLabel = '🏠 WFH day';
+  if (dayObj.isWeekend) typeLabel = '🌿 Weekend';
+  if (dayObj.hasOT)    typeLabel += ' &nbsp;·&nbsp; 🔥 OT ' + dayObj.otTime;
+
+  // Dinner tip
+  const dinner = dayObj.meals[4];
+  const tip    = dinner && dinner.tip ? dinner.tip : DAILY_TIPS[dayObj.dayNum % DAILY_TIPS.length];
+
+  let html = `
     <div class="detail-header-strip">
       <div class="detail-header-left">
-        <h2>${headerDate}</h2>
-        <p>${locStr}${otStr}</p>
+        <h2>${dayObj.dow}, ${dayObj.short}</h2>
+        <p>${typeLabel}</p>
       </div>
-      <span class="day-complete-badge${allDone ? ' show' : ''}" id="completeBadge">✅ Day Complete!</span>
+      <div class="day-complete-badge ${mc===5?'show':''}" id="completeBadge">✅ Day Complete!</div>
     </div>
 
     <div class="detail-mini-stats">
       <div class="detail-mini-stat">
-        <div class="dms-val" id="mealCountDisp">${mc}</div>
-        <div class="dms-lbl">Meals / 5</div>
+        <div class="dms-val" id="dmsChecked">${mc}/5</div>
+        <div class="dms-lbl">Meals Done</div>
       </div>
       <div class="detail-mini-stat dms-purple">
-        <div class="dms-val" id="proteinDisp">${protein}g</div>
+        <div class="dms-val" id="dmsProtein">${pc}g</div>
         <div class="dms-lbl">Protein</div>
+      </div>
+      <div class="detail-mini-stat">
+        <div class="dms-val" id="dmsCal">${cal}</div>
+        <div class="dms-lbl">Cal Logged</div>
       </div>
     </div>
 
     <div class="detail-grid">
       <div class="meals-col">
-        <div class="section-lbl">Meals &amp; Nutrition</div>
-        <div id="mealRowsContainer"></div>
+        <div class="section-lbl">Meals</div>
+  `;
 
-        ${dayData.hasOT ? `
-        <div style="margin-top:14px">
-          <div class="section-lbl">Workout</div>
-          <label class="toggle-wrap" id="otWrap">
-            <div class="toggle">
-              <input type="checkbox" id="otToggle" ${state.ot ? 'checked' : ''}>
-              <span class="toggle-slider"></span>
-            </div>
-            <span class="toggle-label">🔥 Orangetheory @ ${dayData.otTime} done!</span>
-          </label>
-        </div>` : ''}
+  // Meal rows
+  dayObj.meals.forEach((meal, i) => {
+    const checked = state.meals[i] || false;
+    html += `
+      <label class="meal-row ${checked ? 'is-checked' : ''}" id="mealRow${i}" style="cursor:${isPast?'pointer':'default'}">
+        <input type="checkbox" id="mealCb${i}" ${checked?'checked':''} ${isPast?'':'disabled'} onchange="toggleMeal('${date}',${i},this.checked)">
+        <div class="meal-info">
+          <div class="meal-type">${MEAL_ICONS[i]} ${meal.type}</div>
+          <div class="meal-food">${meal.food}</div>
+        </div>
+        <span class="protein-pill">${meal.protein}g · ${meal.cal} cal</span>
+      </label>
+    `;
+  });
+
+  // Progress bars
+  html += `
+    <div class="progress-wrap" style="margin-top:14px;">
+      <div class="progress-label">
+        <span>Meals</span><span id="mealPct">${Math.round(mc/5*100)}%</span>
       </div>
-
-      <div class="sidebar-col">
-        <div class="card">
-          <div class="card-body" style="padding:16px">
-            <div class="section-lbl" style="margin-bottom:8px">Daily Progress</div>
-            <div class="progress-wrap">
-              <div class="progress-label">
-                <span>Meals</span>
-                <span id="mealBarLbl">${mc} / 5</span>
-              </div>
-              <div class="progress-track">
-                <div class="progress-fill" id="mealBar" style="width:${mc/5*100}%"></div>
-              </div>
-            </div>
-            <div class="progress-wrap" style="margin-top:8px">
-              <div class="progress-label">
-                <span>Protein</span>
-                <span id="proteinBarLbl">${protein}g / ${totalProtein}g</span>
-              </div>
-              <div class="progress-track">
-                <div class="progress-fill p-purple" id="proteinBar" style="width:${Math.min(100,totalProtein>0?protein/totalProtein*100:0)}%"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="card">
-          <div class="card-body" style="padding:16px">
-            <div class="section-lbl" style="margin-bottom:8px">Notes</div>
-            <textarea class="form-control" id="notesField" placeholder="How did today feel? Any substitutions?" style="min-height:90px">${state.notes}</textarea>
-          </div>
-        </div>
-
-        <div class="tip-box">
-          <div class="tip-box-label">💡 Daily Tip</div>
-          <p>${tip}</p>
-        </div>
+      <div class="progress-track"><div class="progress-fill" id="mealBar" style="width:${mc/5*100}%"></div></div>
+    </div>
+    <div class="progress-wrap">
+      <div class="progress-label">
+        <span>Protein</span><span>${pc}g / ${ttl}g</span>
       </div>
+      <div class="progress-track"><div class="progress-fill p-purple" style="width:${Math.min(100,pc/ttl*100)}%"></div></div>
     </div>
   `;
 
-  renderMealRows(date, state.meals);
+  html += `</div><div class="sidebar-col">`;
 
-  // OT toggle listener
-  if (dayData.hasOT) {
-    document.getElementById('otToggle').addEventListener('change', e => {
-      const s = loadDay(date);
-      s.ot = e.target.checked;
-      saveDay(date, s);
-      calcMonthlyStats();
-    });
+  // OT toggle (only on OT days, only past/today)
+  if (dayObj.hasOT) {
+    html += `
+      <div>
+        <div class="section-lbl">Orangetheory (${dayObj.otTime})</div>
+        <label class="toggle-wrap" style="cursor:${isPast?'pointer':'default'}">
+          <span class="toggle">
+            <input type="checkbox" id="otToggle" ${state.ot?'checked':''} ${isPast?'':'disabled'} onchange="toggleOT('${date}',this.checked)">
+            <span class="toggle-slider"></span>
+          </span>
+          <span class="toggle-label">${state.ot ? '✅ OT Done!' : 'Mark OT session done'}</span>
+        </label>
+      </div>
+    `;
   }
 
-  // Notes listener
-  document.getElementById('notesField').addEventListener('input', e => {
-    const s = loadDay(date);
-    s.notes = e.target.value;
-    saveDay(date, s);
-  });
+  // Notes
+  html += `
+    <div>
+      <div class="section-lbl">Notes</div>
+      <textarea class="form-control" id="dayNotes" placeholder="How did today go? Energy levels, what you prepped, wins…" ${isPast?'':'disabled'}>${state.notes || ''}</textarea>
+      ${isPast ? '<button class="btn btn-primary btn-sm" style="margin-top:8px;width:100%" onclick="saveNotes(\''+date+'\')">Save Notes</button>' : ''}
+    </div>
+  `;
+
+  // Dinner tip box
+  html += `
+    <div class="tip-box">
+      <div class="tip-box-label">💡 Today's Tip</div>
+      <p>${tip}</p>
+    </div>
+  `;
+
+  html += `</div></div>`;
+
+  document.getElementById('detailBody').innerHTML = html;
+  document.getElementById('detailPanel').classList.add('show');
+
+  // Scroll into view
+  document.getElementById('detailPanel').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 
-function renderMealRows(date, mealChecked) {
-  const dayData = DAYS.find(d => d.date === date);
-  const container = document.getElementById('mealRowsContainer');
-  if (!container || !dayData) return;
-  container.innerHTML = '';
-
-  dayData.meals.forEach((meal, i) => {
-    const ck = mealChecked[i] || false;
-    const lbl = document.createElement('label');
-    lbl.className = 'meal-row' + (ck ? ' is-checked' : '');
-    lbl.innerHTML = `
-      <input type="checkbox" ${ck ? 'checked' : ''}>
-      <div class="meal-info">
-        <div class="meal-type">${MEAL_ICONS[i]} ${meal.type}</div>
-        <div class="meal-food">${meal.food}</div>
-      </div>
-      <span class="protein-pill">${meal.protein}g</span>
-      <span class="badge badge-amber" style="font-size:0.75rem;padding:3px 8px">${meal.cal}cal</span>
-    `;
-    const cb = lbl.querySelector('input');
-    cb.addEventListener('change', e => toggleMeal(date, i, e.target.checked));
-    container.appendChild(lbl);
-  });
-}
-
-function toggleMeal(date, mealIdx, checked) {
-  const s = loadDay(date);
-  s.meals[mealIdx] = checked;
-  saveDay(date, s);
-  updateDetailUI(date, s.meals);
-  calcMonthlyStats();
+/* ── Toggle meal checkbox ─────────────────────────────── */
+function toggleMeal(date, idx, checked) {
+  const state = loadDay(date);
+  state.meals[idx] = checked;
+  saveDay(date, state);
+  refreshDetailMiniStats(date);
   buildCalendar();
+  calcMonthlyStats();
 }
 
-function updateDetailUI(date, mealChecked) {
-  const dayData = DAYS.find(d => d.date === date);
-  if (!dayData) return;
-  const mc = mealChecked.filter(Boolean).length;
-  const protein = dayData.meals.reduce((sum, m, i) => sum + (mealChecked[i] ? m.protein : 0), 0);
-  const totalProtein = dayData.meals.reduce((s, m) => s + m.protein, 0);
-  const allDone = mc === 5;
-
-  renderMealRows(date, mealChecked);
-
-  const el = (id) => document.getElementById(id);
-  if (el('mealCountDisp')) el('mealCountDisp').textContent = mc;
-  if (el('proteinDisp'))   el('proteinDisp').textContent   = protein + 'g';
-  if (el('mealBar'))       el('mealBar').style.width       = (mc/5*100) + '%';
-  if (el('mealBarLbl'))    el('mealBarLbl').textContent    = mc + ' / 5';
-  if (el('proteinBar'))    el('proteinBar').style.width    = Math.min(100, totalProtein > 0 ? protein/totalProtein*100 : 0) + '%';
-  if (el('proteinBarLbl')) el('proteinBarLbl').textContent = protein + 'g / ' + totalProtein + 'g';
-  const badge = el('completeBadge');
-  if (badge) badge.classList.toggle('show', allDone);
+/* ── Toggle OT ───────────────────────────────────────── */
+function toggleOT(date, checked) {
+  const state = loadDay(date);
+  state.ot = checked;
+  saveDay(date, state);
+  calcMonthlyStats();
+  // Update label
+  const lbl = document.querySelector('#otToggle + .toggle-slider');
+  const wrap = document.querySelector('.toggle-wrap .toggle-label');
+  if (wrap) wrap.textContent = checked ? '✅ OT Done!' : 'Mark OT session done';
 }
 
-/* ── INIT ─────────────────────────────────────────────── */
+/* ── Save notes ─────────────────────────────────────── */
+function saveNotes(date) {
+  const state = loadDay(date);
+  state.notes = document.getElementById('dayNotes').value;
+  saveDay(date, state);
+  if (window.GS) {
+    GS.indicate('saved', '✓ Notes saved');
+  }
+}
+
+/* ── Refresh mini-stats in detail panel ──────────────── */
+function refreshDetailMiniStats(date) {
+  const dayObj = DAYS.find(d => d.date === date);
+  if (!dayObj) return;
+  const state = loadDay(date);
+  const mc  = state.meals.filter(Boolean).length;
+  const pc  = state.meals.reduce((s,_,i) => s + (state.meals[i] ? (dayObj.meals[i].protein||0) : 0), 0);
+  const cal = state.meals.reduce((s,_,i) => s + (state.meals[i] ? (dayObj.meals[i].cal||0) : 0), 0);
+
+  const e = id => document.getElementById(id);
+  if (e('dmsChecked')) e('dmsChecked').textContent = mc+'/5';
+  if (e('dmsProtein')) e('dmsProtein').textContent = pc+'g';
+  if (e('dmsCal'))     e('dmsCal').textContent     = cal;
+  if (e('mealPct'))    e('mealPct').textContent    = Math.round(mc/5*100)+'%';
+  if (e('mealBar'))    e('mealBar').style.width    = (mc/5*100)+'%';
+  if (e('completeBadge')) e('completeBadge').className = 'day-complete-badge' + (mc===5?' show':'');
+
+  // Update row styles
+  dayObj.meals.forEach((_,i) => {
+    const row = document.getElementById('mealRow'+i);
+    if (row) {
+      if (state.meals[i]) row.classList.add('is-checked');
+      else row.classList.remove('is-checked');
+    }
+  });
+}
+
+/* ── Init ─────────────────────────────────────────────── */
+function init() {
+  buildCalendar();
+  calcMonthlyStats();
+
+  // Auto-open today if it's in range
+  const today = todayStr();
+  const todayInRange = DAYS.find(d => d.date === today);
+  if (todayInRange) {
+    openDay(today);
+  } else if (DAYS.length) {
+    // If before range, open first day; if after, open last
+    if (today < DAYS[0].date) openDay(DAYS[0].date);
+    else openDay(DAYS[DAYS.length-1].date);
+  }
+}
+
 document.getElementById('navToggle').addEventListener('click', () => {
   document.getElementById('navLinks').classList.toggle('open');
 });
 
-calcMonthlyStats();
-buildCalendar();
+init();
 
-// Open today if in April 2025, else open Apr 1
-const today = todayStr();
-const inApril = DAYS.find(d => d.date === today);
-if (inApril) {
-  selectDay(today);
-} else {
-  selectDay('2025-04-01');
-}
-
-/* ── CLOUD SYNC LOAD ─────────────────────────────────── */
+// Cloud sync on load
 window.addEventListener('load', async () => {
   if (!window.GS) return;
   const cloud = await GS.get('Tracker');
   if (!cloud || typeof cloud !== 'object') return;
   let changed = false;
   DAYS.forEach(d => {
-    const remote = cloud[d.date];
-    if (!remote) return;
-    const local = loadDay(d.date);
-    if (JSON.stringify(remote) !== JSON.stringify(local)) {
-      localStorage.setItem(dayKey(d.date), JSON.stringify(remote));
-      changed = true;
+    if (cloud[d.date]) {
+      const local = loadDay(d.date);
+      if (JSON.stringify(cloud[d.date]) !== JSON.stringify(local)) {
+        localStorage.setItem(dayKey(d.date), JSON.stringify(cloud[d.date]));
+        changed = true;
+      }
     }
   });
-  if (!changed) return;
-  calcMonthlyStats();
-  buildCalendar();
-  if (selectedDate) renderDetailPanel(selectedDate);
+  if (changed) {
+    buildCalendar();
+    calcMonthlyStats();
+    if (selectedDate) refreshDetailMiniStats(selectedDate);
+  }
 });
 </script>
 </body>

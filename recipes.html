@@ -40,17 +40,30 @@
       overflow: hidden; transition: transform 0.2s, box-shadow 0.2s;
     }
     .r-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
+    .r-card.is-fav { border-color: var(--amber); }
 
     .r-head {
       background: var(--teal); padding: 16px 18px; color: white;
+      position: relative;
     }
     .r-head h3 { font-size: 1rem; font-weight: 800; margin-bottom: 8px; line-height: 1.3; }
     .r-badges { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 8px; }
     .r-badge-cuisine { background: rgba(255,255,255,0.2); color: white; padding: 3px 9px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; }
     .r-badge-protein  { background: rgba(83,74,183,0.35); color: white; padding: 3px 9px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; }
     .r-badge-cal      { background: rgba(186,117,23,0.4); color: #ffe4a0; padding: 3px 9px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; }
+    .r-badge-quick    { background: rgba(255,255,255,0.15); color: white; padding: 3px 9px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; }
 
     .r-meta { font-size: 0.8125rem; color: rgba(255,255,255,0.85); display: flex; gap: 12px; flex-wrap: wrap; }
+
+    .fav-btn {
+      position: absolute; top: 12px; right: 12px;
+      background: rgba(255,255,255,0.2); border: none; border-radius: 50%;
+      width: 30px; height: 30px; cursor: pointer; font-size: 1rem;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.15s; color: white;
+    }
+    .fav-btn:hover { background: rgba(255,255,255,0.35); transform: scale(1.1); }
+    .fav-btn.is-fav { background: var(--amber); }
 
     .r-body { padding: 0; }
     .r-toggle-btn {
@@ -61,7 +74,7 @@
       transition: background 0.15s; font-family: inherit;
     }
     .r-toggle-btn:hover { background: var(--teal-light); }
-    .r-expand { display: none; padding: 16px 18px; }
+    .r-expand { display: none; padding: 16px 18px; border-top: 1px solid var(--gray-100); }
     .r-expand.open { display: block; }
 
     .r-sec-title {
@@ -109,12 +122,12 @@
 
   <div class="page-header">
     <h1 class="page-title">Recipe Library</h1>
-    <p class="page-subtitle">All April 2025 recipes — Indian, South Indian, Italian, Thai, and quick meals</p>
+    <p class="page-subtitle">April 2026 recipe library — Indian, South Indian, Italian, Thai, Mediterranean, Mexican, and quick meals</p>
   </div>
 
   <!-- SEARCH -->
   <div class="search-bar">
-    <input type="search" id="searchInput" class="form-control" placeholder="Search recipes…" style="font-size:1rem">
+    <input type="search" id="searchInput" class="form-control" placeholder="Search recipes, ingredients, cuisine…" style="font-size:1rem">
   </div>
 
   <!-- FILTERS -->
@@ -124,12 +137,15 @@
     <button class="filter-btn" data-filter="South Indian">South Indian</button>
     <button class="filter-btn" data-filter="Italian">Italian</button>
     <button class="filter-btn" data-filter="Thai">Thai</button>
-    <button class="filter-btn" data-filter="Quick">Quick</button>
-    <button class="filter-btn" data-filter="highProtein">High Protein (≥20g)</button>
+    <button class="filter-btn" data-filter="Mediterranean">Mediterranean</button>
+    <button class="filter-btn" data-filter="Mexican">Mexican</button>
+    <button class="filter-btn" data-filter="Quick">Quick (&lt;20 min)</button>
+    <button class="filter-btn" data-filter="highProtein">High Protein (&gt;20g)</button>
+    <button class="filter-btn" data-filter="favorites">⭐ Favorites</button>
   </div>
 
   <!-- RESULTS COUNT -->
-  <div class="results-count" id="resultsCount">Showing <strong>25</strong> of <strong>25</strong> recipes</div>
+  <div class="results-count" id="resultsCount">Showing <strong>0</strong> of <strong>0</strong> recipes</div>
 
   <!-- RECIPE GRID -->
   <div class="recipe-grid-3" id="recipeGrid"></div>
@@ -137,13 +153,31 @@
 </div>
 
 <script src="data.js"></script>
+<script src="sync.js"></script>
 <script>
-const RECIPES = window.RECIPES || [];
-let activeFilter = 'All';
-let searchQuery  = '';
+const RECIPES     = window.RECIPES || [];
+const FAV_KEY     = 'wellness_recipe_favorites';
+
+let activeFilter  = 'All';
+let searchQuery   = '';
+
+/* ── Favorites ───────────────────────────────────────── */
+function loadFavs() { return JSON.parse(localStorage.getItem(FAV_KEY) || '[]'); }
+function saveFavs(arr) {
+  localStorage.setItem(FAV_KEY, JSON.stringify(arr));
+  if (window.GS) GS.post('MealPlan', { favorites: arr });
+}
+function toggleFav(id) {
+  let favs = loadFavs();
+  if (favs.includes(id)) favs = favs.filter(f => f !== id);
+  else favs.push(id);
+  saveFavs(favs);
+  buildGrid();
+}
 
 /* ── Filter + search ─────────────────────────────────── */
 function filteredRecipes() {
+  const favs = loadFavs();
   return RECIPES.filter(r => {
     const matchSearch = searchQuery === '' ||
       r.name.toLowerCase().includes(searchQuery) ||
@@ -152,7 +186,11 @@ function filteredRecipes() {
 
     let matchFilter = true;
     if (activeFilter === 'highProtein') {
-      matchFilter = r.highProtein || r.protein >= 20;
+      matchFilter = r.protein >= 20;
+    } else if (activeFilter === 'Quick') {
+      matchFilter = r.quickMake || (r.prepTime + r.cookTime) <= 20;
+    } else if (activeFilter === 'favorites') {
+      matchFilter = favs.includes(r.id);
     } else if (activeFilter !== 'All') {
       matchFilter = r.cuisine === activeFilter;
     }
@@ -163,54 +201,85 @@ function filteredRecipes() {
 /* ── Build grid ──────────────────────────────────────── */
 function buildGrid() {
   const recipes = filteredRecipes();
-  const grid = document.getElementById('recipeGrid');
+  const favs    = loadFavs();
+  const grid    = document.getElementById('recipeGrid');
   grid.innerHTML = '';
 
   document.getElementById('resultsCount').innerHTML =
     `Showing <strong>${recipes.length}</strong> of <strong>${RECIPES.length}</strong> recipes`;
 
-  recipes.forEach(r => {
-    const card = document.createElement('div');
-    card.className = 'r-card';
+  if (recipes.length === 0) {
+    grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:60px 20px;color:var(--text-light)">
+      <div style="font-size:2.5rem;margin-bottom:12px">🔍</div>
+      <p style="font-size:1rem">No recipes match your search or filter.</p>
+    </div>`;
+    return;
+  }
 
-    const hpBadge = (r.highProtein || r.protein >= 20) ? '<span class="r-badge-protein">⚡ High Protein</span>' : '';
-    const qmBadge = r.quickMake ? '<span class="r-badge-cuisine" style="background:rgba(255,255,255,0.15)">⚡ Quick</span>' : '';
+  recipes.forEach(r => {
+    const isFav    = favs.includes(r.id);
+    const hpBadge  = r.protein >= 20 ? '<span class="r-badge-protein">⚡ High Protein</span>' : '';
+    const qmBadge  = r.quickMake ? '<span class="r-badge-quick">⚡ Quick</span>' : '';
+    const totalMin = r.prepTime + r.cookTime;
+
+    const card = document.createElement('div');
+    card.className = 'r-card' + (isFav ? ' is-fav' : '');
+    card.id = 'rcard-' + r.id;
 
     card.innerHTML = `
       <div class="r-head">
+        <button class="fav-btn ${isFav ? 'is-fav' : ''}" data-id="${r.id}" title="${isFav ? 'Remove from favorites' : 'Add to favorites'}">
+          ${isFav ? '⭐' : '☆'}
+        </button>
         <h3>${r.name}</h3>
         <div class="r-badges">
           <span class="r-badge-cuisine">${r.cuisine}</span>
-          ${hpBadge}
           <span class="r-badge-protein">${r.protein}g protein</span>
           <span class="r-badge-cal">${r.cal} cal</span>
+          ${hpBadge}
+          ${qmBadge}
         </div>
         <div class="r-meta">
-          <span>⏱ Prep ${r.prepTime}min</span>
-          <span>🍳 Cook ${r.cookTime}min</span>
+          <span>⏱ Prep ${r.prepTime} min</span>
+          <span>🍳 Cook ${r.cookTime} min</span>
+          <span>⏰ Total ${totalMin} min</span>
         </div>
       </div>
       <div class="r-body">
         <button class="r-toggle-btn" data-id="${r.id}">
-          <span>▼ View Recipe</span>
-          <span></span>
+          View recipe <span class="r-arrow">▼</span>
         </button>
-        <div class="r-expand" id="rexpand-${r.id}">
+        <div class="r-expand" id="rexp-${r.id}">
           <div class="r-sec-title">Ingredients</div>
           <ul>${r.ingredients.map(i => `<li>${i}</li>`).join('')}</ul>
-          <div class="r-sec-title">Method</div>
+          <div class="r-sec-title">Steps</div>
           <ol>${r.steps.map(s => `<li>${s}</li>`).join('')}</ol>
         </div>
       </div>
     `;
 
-    card.querySelector('.r-toggle-btn').addEventListener('click', function() {
-      const exp = document.getElementById('rexpand-' + r.id);
-      const isOpen = exp.classList.toggle('open');
-      this.querySelector('span').textContent = isOpen ? '▲ Hide Recipe' : '▼ View Recipe';
-    });
-
     grid.appendChild(card);
+  });
+
+  // Toggle expand
+  grid.querySelectorAll('.r-toggle-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const id  = btn.dataset.id;
+      const exp = document.getElementById('rexp-' + id);
+      const arrow = btn.querySelector('.r-arrow');
+      exp.classList.toggle('open');
+      arrow.textContent = exp.classList.contains('open') ? '▲' : '▼';
+      btn.textContent = (exp.classList.contains('open') ? 'Hide recipe ' : 'View recipe ');
+      btn.appendChild(arrow);
+    });
+  });
+
+  // Favorite buttons
+  grid.querySelectorAll('.fav-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      toggleFav(btn.dataset.id);
+    });
   });
 }
 
@@ -224,18 +293,32 @@ document.getElementById('filterBar').addEventListener('click', e => {
   buildGrid();
 });
 
-/* ── Search input ────────────────────────────────────── */
+/* ── Search ─────────────────────────────────────────── */
 document.getElementById('searchInput').addEventListener('input', e => {
   searchQuery = e.target.value.toLowerCase().trim();
   buildGrid();
 });
 
-/* ── Nav toggle ──────────────────────────────────────── */
+/* ── Nav toggle ─────────────────────────────────────── */
 document.getElementById('navToggle').addEventListener('click', () => {
   document.getElementById('navLinks').classList.toggle('open');
 });
 
 buildGrid();
+
+// Load cloud favorites
+window.addEventListener('load', async () => {
+  if (!window.GS) return;
+  const cloud = await GS.get('MealPlan');
+  if (cloud && cloud.favorites && Array.isArray(cloud.favorites)) {
+    const local = loadFavs();
+    const merged = [...new Set([...local, ...cloud.favorites])];
+    if (JSON.stringify(merged) !== JSON.stringify(local)) {
+      saveFavs(merged);
+      buildGrid();
+    }
+  }
+});
 </script>
 </body>
 </html>
