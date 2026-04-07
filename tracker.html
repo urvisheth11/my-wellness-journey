@@ -124,6 +124,48 @@
       .cal-day-btn { width: 30px; height: 30px; font-size: 0.7rem; }
       .cal-grid { gap: 3px; }
     }
+
+    /* ── BREAKFAST FLEXIBLE LOGGER ───────────────────────── */
+    .bk-ate-mode {
+      background: var(--teal-light); border: 1.5px solid var(--teal);
+      border-radius: 10px; padding: 14px 16px; margin-bottom: 8px;
+    }
+    .bk-select {
+      width: 100%; padding: 9px 10px; border: 1.5px solid var(--gray-200);
+      border-radius: 8px; font-family: inherit; font-size: 0.875rem;
+      background: white; color: var(--text); cursor: pointer; margin-bottom: 10px;
+    }
+    .bk-custom-inputs {
+      display: grid; grid-template-columns: 1fr 76px 76px;
+      gap: 8px; margin-bottom: 10px;
+    }
+    .bk-action-row { display: flex; gap: 8px; }
+    .btn-log-actual {
+      display: block; width: 100%; background: none;
+      border: 1.5px dashed var(--teal); color: var(--teal);
+      border-radius: 8px; padding: 7px 12px;
+      font-family: inherit; font-size: 0.8125rem; font-weight: 600;
+      cursor: pointer; margin-top: 6px; text-align: left;
+      transition: background 0.15s;
+    }
+    .btn-log-actual:hover { background: var(--teal-light); }
+    .bk-amber-badge {
+      display: inline-block; background: var(--amber-light); color: var(--amber);
+      border-radius: 20px; padding: 1px 8px; font-size: 0.6875rem;
+      font-weight: 700; margin-left: 6px; vertical-align: middle;
+    }
+    .bk-planned-ref {
+      font-size: 0.75rem; color: var(--text-light);
+      font-style: italic; margin-top: 3px;
+    }
+    .bk-actual-name { color: var(--teal); font-weight: 600; }
+    .bk-actual-pill { color: var(--teal) !important; }
+    .bk-edit-btn {
+      background: none; border: none; cursor: pointer;
+      padding: 0 3px; color: var(--text-light); font-size: 0.875rem;
+      vertical-align: middle;
+    }
+    .bk-edit-btn:hover { color: var(--teal); }
   </style>
 </head>
 <body>
@@ -216,6 +258,23 @@ const DAYS   = window.APRIL_DATA.days; // 25 objects
 const PREFIX = 'wellness_april_';
 const MEAL_ICONS = ['🥣','🥤','🥗','🍎','🍽️'];
 
+/* Breakfast options for the flexible logger */
+const BK_OPTIONS = [
+  { name: 'Besan ke chille 2',                         protein: 14, cal: 280 },
+  { name: 'Overnight oats jar',                         protein: 22, cal: 380 },
+  { name: 'Masala oats warm bowl',                      protein: 18, cal: 300 },
+  { name: 'Smoothie bowl — yogurt, berries & granola',  protein: 20, cal: 380 },
+  { name: 'Masala cottage cheese toast on sourdough',   protein: 22, cal: 320 },
+  { name: 'Poha with veggies',                          protein: 14, cal: 290 },
+  { name: 'Oats idli with peanut chutney',              protein: 18, cal: 310 },
+  { name: 'Protein pancake stack with Greek yogurt',    protein: 30, cal: 340 },
+  { name: 'Besan chilla with yogurt dip',               protein: 22, cal: 300 },
+  { name: 'Aloo paratha with Greek yogurt',             protein: 16, cal: 520 },
+  { name: 'Paneer bhurji on toast',                     protein: 26, cal: 380 },
+  { name: 'Warm savory masala oats',                    protein: 18, cal: 300 },
+  { name: 'South Indian rava upma',                     protein: 12, cal: 320 },
+];
+
 const DAILY_TIPS = [
   "Consistency beats perfection — showing up 80% is better than aiming for 100% and quitting.",
   "Every meal checked off is a deposit in your future self's health account.",
@@ -268,6 +327,16 @@ function todayStr() {
 }
 
 function isPastOrToday(date) { return date <= todayStr(); }
+
+/* Returns the protein/cal to use for breakfast in totals.
+   If the user has logged an actual breakfast, use those values.
+   Otherwise fall back to the planned meal values. */
+function getActualBkNutrition(state, plannedMeal) {
+  if (state.meals[0] && state.actualBreakfast) {
+    return { protein: state.actualBreakfast.protein || 0, cal: state.actualBreakfast.calories || 0 };
+  }
+  return { protein: plannedMeal.protein || 0, cal: plannedMeal.cal || 0 };
+}
 
 /* ── Monthly stats ────────────────────────────────────── */
 function calcMonthlyStats() {
@@ -379,10 +448,12 @@ function openDay(date) {
   const today  = todayStr();
   const isPast = date <= today;
 
-  const mc  = state.meals.filter(Boolean).length;
-  const ttl = dayObj.meals.reduce((s,m) => s + (m.protein||0), 0);
-  const pc  = state.meals.reduce((s,_,i) => s + (state.meals[i] ? (dayObj.meals[i].protein||0) : 0), 0);
-  const cal = state.meals.reduce((s,_,i) => s + (state.meals[i] ? (dayObj.meals[i].cal||0) : 0), 0);
+  const mc   = state.meals.filter(Boolean).length;
+  const bkNut = getActualBkNutrition(state, dayObj.meals[0]);
+  // ttl = potential protein if all meals eaten (uses actual bk if logged)
+  const ttl  = dayObj.meals.reduce((s,m,i) => s + (i===0 ? bkNut.protein : (m.protein||0)), 0);
+  const pc   = state.meals.reduce((s,_,i) => s + (state.meals[i] ? (i===0 ? bkNut.protein : (dayObj.meals[i].protein||0)) : 0), 0);
+  const cal  = state.meals.reduce((s,_,i) => s + (state.meals[i] ? (i===0 ? bkNut.cal     : (dayObj.meals[i].cal||0))     : 0), 0);
 
   // Day type label
   let typeLabel = '';
@@ -424,19 +495,23 @@ function openDay(date) {
         <div class="section-lbl">Meals</div>
   `;
 
-  // Meal rows
+  // Meal rows — breakfast (index 0) uses flexible logger
   dayObj.meals.forEach((meal, i) => {
-    const checked = state.meals[i] || false;
-    html += `
-      <label class="meal-row ${checked ? 'is-checked' : ''}" id="mealRow${i}" style="cursor:${isPast?'pointer':'default'}">
-        <input type="checkbox" id="mealCb${i}" ${checked?'checked':''} ${isPast?'':'disabled'} onchange="toggleMeal('${date}',${i},this.checked)">
-        <div class="meal-info">
-          <div class="meal-type">${MEAL_ICONS[i]} ${meal.type}</div>
-          <div class="meal-food">${meal.food}</div>
-        </div>
-        <span class="protein-pill">${meal.protein}g · ${meal.cal} cal</span>
-      </label>
-    `;
+    if (i === 0) {
+      html += renderBreakfastHTML(date, meal, state, isPast);
+    } else {
+      const checked = state.meals[i] || false;
+      html += `
+        <label class="meal-row ${checked ? 'is-checked' : ''}" id="mealRow${i}" style="cursor:${isPast?'pointer':'default'}">
+          <input type="checkbox" id="mealCb${i}" ${checked?'checked':''} ${isPast?'':'disabled'} onchange="toggleMeal('${date}',${i},this.checked)">
+          <div class="meal-info">
+            <div class="meal-type">${MEAL_ICONS[i]} ${meal.type}</div>
+            <div class="meal-food">${meal.food}</div>
+          </div>
+          <span class="protein-pill">${meal.protein}g · ${meal.cal} cal</span>
+        </label>
+      `;
+    }
   });
 
   // Progress bars
@@ -536,9 +611,10 @@ function refreshDetailMiniStats(date) {
   const dayObj = DAYS.find(d => d.date === date);
   if (!dayObj) return;
   const state = loadDay(date);
-  const mc  = state.meals.filter(Boolean).length;
-  const pc  = state.meals.reduce((s,_,i) => s + (state.meals[i] ? (dayObj.meals[i].protein||0) : 0), 0);
-  const cal = state.meals.reduce((s,_,i) => s + (state.meals[i] ? (dayObj.meals[i].cal||0) : 0), 0);
+  const mc    = state.meals.filter(Boolean).length;
+  const bkNut = getActualBkNutrition(state, dayObj.meals[0]);
+  const pc    = state.meals.reduce((s,_,i) => s + (state.meals[i] ? (i===0 ? bkNut.protein : (dayObj.meals[i].protein||0)) : 0), 0);
+  const cal   = state.meals.reduce((s,_,i) => s + (state.meals[i] ? (i===0 ? bkNut.cal     : (dayObj.meals[i].cal||0))     : 0), 0);
 
   const e = id => document.getElementById(id);
   if (e('dmsChecked')) e('dmsChecked').textContent = mc+'/5';
@@ -556,6 +632,131 @@ function refreshDetailMiniStats(date) {
       else row.classList.remove('is-checked');
     }
   });
+}
+
+/* ── Breakfast flexible logger ───────────────────────── */
+
+/* Returns the HTML string for the breakfast slot (meal index 0).
+   Three visual states:
+   A) Logged (meals[0] true + actualBreakfast saved) → shows logged meal, edit button
+   B) Plan mode (not logged) → shows planned meal + "Log what I actually ate" button
+   Ate mode (C) is rendered dynamically by showBkAteMode(). */
+function renderBreakfastHTML(date, plannedMeal, state, isPast) {
+  const checked  = state.meals[0] || false;
+  const ab       = state.actualBreakfast || null;
+  const hasLogged = checked && ab;
+
+  const dispProtein = hasLogged ? ab.protein  : plannedMeal.protein;
+  const dispCal     = hasLogged ? ab.calories : plannedMeal.cal;
+  const dispName    = hasLogged ? ab.name     : plannedMeal.food;
+  const isDifferent = hasLogged && ab.name !== plannedMeal.food;
+
+  let html = `<div id="bkContainer">`;
+
+  html += `
+    <label class="meal-row ${checked ? 'is-checked' : ''}" id="mealRow0" style="cursor:${isPast?'pointer':'default'};align-items:flex-start">
+      <input type="checkbox" id="mealCb0" ${checked?'checked':''} ${isPast?'':'disabled'}
+             onchange="toggleMeal('${date}',0,this.checked)">
+      <div class="meal-info">
+        <div class="meal-type">
+          ${MEAL_ICONS[0]} Breakfast
+          ${hasLogged ? `<span class="bk-amber-badge">Logged ✓</span>` : ''}
+          ${hasLogged && isPast ? `<button class="bk-edit-btn" onclick="showBkAteMode('${date}')" title="Edit breakfast log">✏️</button>` : ''}
+        </div>
+        <div class="meal-food ${hasLogged ? 'bk-actual-name' : ''}">${dispName}</div>
+        ${hasLogged && isDifferent ? `<div class="bk-planned-ref">Planned: ${plannedMeal.food}</div>` : ''}
+      </div>
+      <span class="protein-pill ${hasLogged ? 'bk-actual-pill' : ''}">${dispProtein}g · ${dispCal} cal</span>
+    </label>
+  `;
+
+  if (isPast && !hasLogged) {
+    html += `<button class="btn-log-actual" onclick="showBkAteMode('${date}')">📝 Log what I actually ate</button>`;
+  }
+
+  html += `</div>`;
+  return html;
+}
+
+/* Replace bkContainer contents with the dropdown selector (Ate mode) */
+function showBkAteMode(date) {
+  const container = document.getElementById('bkContainer');
+  if (!container) return;
+
+  const dayObj = DAYS.find(d => d.date === date);
+  const state  = loadDay(date);
+  const ab     = state.actualBreakfast;
+
+  let optHtml = `<option value="">— select what you ate —</option>`;
+  BK_OPTIONS.forEach((opt, i) => {
+    const sel = (ab && !ab.isCustom && ab.name === opt.name) ? 'selected' : '';
+    optHtml += `<option value="${i}" ${sel}>${opt.name} — ${opt.protein}g · ${opt.cal} cal</option>`;
+  });
+  const customSel = (ab && ab.isCustom) ? 'selected' : '';
+  optHtml += `<option value="custom" ${customSel}>Something else (custom entry)</option>`;
+
+  const isCustom     = ab && ab.isCustom;
+  const customName   = isCustom ? (ab.name   || '') : '';
+  const customProtein = isCustom ? (ab.protein || '') : '';
+  const customCal    = isCustom ? (ab.calories || '') : '';
+  const planned      = dayObj ? dayObj.meals[0].food : '';
+
+  container.innerHTML = `
+    <div class="bk-ate-mode">
+      <div class="section-lbl" style="margin-bottom:8px">🥣 Breakfast — what did you actually eat?</div>
+      <select class="bk-select" id="bkSelect" onchange="bkSelectChanged()">
+        ${optHtml}
+      </select>
+      <div id="bkCustomInputs" class="bk-custom-inputs" style="display:${isCustom?'grid':'none'}">
+        <input  type="text"   class="form-control" id="bkCustomName"    placeholder="What did you eat?" value="${customName}">
+        <input  type="number" class="form-control" id="bkCustomProtein" placeholder="g protein" min="0" max="200" value="${customProtein}" style="text-align:center">
+        <input  type="number" class="form-control" id="bkCustomCal"     placeholder="cal" min="0" max="2000" value="${customCal}" style="text-align:center">
+      </div>
+      <div class="bk-action-row">
+        <button class="btn btn-primary btn-sm" style="flex:1" onclick="confirmBreakfast('${date}')">✓ Log this breakfast</button>
+        <button class="btn btn-outline btn-sm"                onclick="cancelBkAteMode('${date}')">Cancel</button>
+      </div>
+      <div style="font-size:0.75rem;color:var(--text-light);margin-top:10px">Planned today: ${planned}</div>
+    </div>
+  `;
+}
+
+/* Show/hide custom fields when "Something else" is selected */
+function bkSelectChanged() {
+  const sel    = document.getElementById('bkSelect');
+  const custom = document.getElementById('bkCustomInputs');
+  if (!sel || !custom) return;
+  custom.style.display = sel.value === 'custom' ? 'grid' : 'none';
+}
+
+/* Confirm the selected / entered breakfast, save, refresh UI */
+function confirmBreakfast(date) {
+  const sel = document.getElementById('bkSelect');
+  if (!sel || !sel.value) { alert('Please select what you ate.'); return; }
+
+  let ab;
+  if (sel.value === 'custom') {
+    const name    = (document.getElementById('bkCustomName').value    || '').trim() || 'Custom breakfast';
+    const protein = Math.max(0, parseInt(document.getElementById('bkCustomProtein').value) || 0);
+    const calories= Math.max(0, parseInt(document.getElementById('bkCustomCal').value)     || 0);
+    ab = { name, protein, calories, isCustom: true };
+  } else {
+    const opt = BK_OPTIONS[parseInt(sel.value)];
+    ab = { name: opt.name, protein: opt.protein, calories: opt.cal, isCustom: false };
+  }
+
+  const state = loadDay(date);
+  state.meals[0]       = true;
+  state.actualBreakfast = ab;
+  saveDay(date, state);
+
+  // Re-render panel (scroll: block nearest = no visible jump if already visible)
+  openDay(date);
+}
+
+/* Cancel ate-mode and return to plan mode view */
+function cancelBkAteMode(date) {
+  openDay(date);
 }
 
 /* ── Init ─────────────────────────────────────────────── */
