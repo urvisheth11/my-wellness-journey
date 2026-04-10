@@ -166,6 +166,105 @@
       vertical-align: middle;
     }
     .bk-edit-btn:hover { color: var(--teal); }
+
+    /* ── DINNER SMART LOGGER ─────────────────────────────── */
+    .dn-tabs { display: flex; gap: 4px; margin-bottom: 10px; }
+    .dn-tab-btn {
+      flex: 1; padding: 7px 6px; border: 1.5px solid var(--gray-200);
+      border-radius: 8px; background: white; color: var(--text-light);
+      font-family: inherit; font-size: 0.8rem; font-weight: 600;
+      cursor: pointer; text-align: center; transition: all 0.15s;
+    }
+    .dn-tab-btn.active { border-color: var(--teal); color: var(--teal); background: var(--teal-light); }
+    .dn-tab-btn:hover:not(.active) { border-color: var(--gray-300); color: var(--text); }
+
+    .dn-photo-box {
+      border: 2px dashed var(--teal); border-radius: 12px;
+      background: var(--teal-light); padding: 32px 20px;
+      text-align: center; cursor: pointer; transition: background 0.15s;
+    }
+    .dn-photo-box:hover { background: rgba(29,158,117,0.12); }
+    .dn-photo-icon { font-size: 2.5rem; margin-bottom: 8px; }
+    .dn-photo-label { font-size: 0.9375rem; color: var(--teal); font-weight: 600; }
+    .dn-photo-sublabel { font-size: 0.8125rem; color: var(--text-light); margin-top: 4px; }
+    .dn-photo-preview {
+      width: 100%; max-height: 200px; object-fit: cover;
+      border-radius: 10px; border: 2px solid var(--teal); margin-bottom: 10px; display: block;
+    }
+
+    .dn-spinner {
+      display: flex; align-items: center; gap: 8px; padding: 16px;
+      background: var(--teal-light); border-radius: 10px;
+      color: var(--teal); font-weight: 600; font-size: 0.9rem; margin-top: 10px;
+    }
+    .dn-spinner-dot {
+      width: 7px; height: 7px; border-radius: 50%; background: var(--teal); flex-shrink: 0;
+      animation: dnPulse 1.2s ease-in-out infinite;
+    }
+    .dn-spinner-dot:nth-child(2) { animation-delay: 0.2s; }
+    .dn-spinner-dot:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes dnPulse {
+      0%,100% { transform: scale(1); opacity: 0.5; }
+      50%      { transform: scale(1.5); opacity: 1; }
+    }
+
+    .dn-results-card {
+      background: white; border: 1.5px solid var(--gray-200);
+      border-radius: 10px; padding: 14px; margin-top: 10px;
+    }
+    .dn-foods-table { width: 100%; border-collapse: collapse; font-size: 0.8125rem; margin: 10px 0 12px; }
+    .dn-foods-table th {
+      background: var(--gray-50); padding: 6px 8px; text-align: left;
+      font-size: 0.7rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.04em; color: var(--text-light);
+    }
+    .dn-foods-table td { padding: 6px 8px; border-bottom: 1px solid var(--gray-100); }
+    .dn-totals-row td {
+      font-weight: 800; color: var(--teal);
+      background: var(--teal-light) !important; border-top: 2px solid var(--teal);
+    }
+    .dn-confidence {
+      display: inline-flex; align-items: center; gap: 5px;
+      border-radius: 20px; padding: 3px 10px; font-size: 0.75rem;
+      font-weight: 700; margin-bottom: 8px;
+    }
+    .dn-conf-high   { background: #dcfce7; color: #15803d; }
+    .dn-conf-medium { background: var(--amber-light); color: var(--amber); }
+    .dn-conf-low    { background: #fee2e2; color: #dc2626; }
+    .dn-notes { font-size: 0.8rem; color: var(--text-light); font-style: italic; margin-bottom: 12px; }
+    .dn-totals-large { display: flex; gap: 10px; margin-bottom: 12px; }
+    .dn-total-item {
+      background: var(--teal-light); border-radius: 10px;
+      padding: 12px 14px; flex: 1; text-align: center;
+    }
+    .dn-total-val { font-size: 1.5rem; font-weight: 800; color: var(--teal); letter-spacing: -0.03em; }
+    .dn-total-lbl { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; color: var(--text-light); margin-top: 2px; }
+    .dn-results-actions { display: flex; flex-direction: column; gap: 8px; }
+    .dn-analyze-again {
+      text-align: center; font-size: 0.8125rem; color: var(--teal);
+      cursor: pointer; text-decoration: underline;
+      background: none; border: none; font-family: inherit; padding: 4px;
+    }
+    .dn-amber-badge {
+      display: inline-block; background: var(--amber-light); color: var(--amber);
+      border-radius: 20px; padding: 1px 8px; font-size: 0.6875rem;
+      font-weight: 700; margin-left: 6px; vertical-align: middle;
+    }
+    .dn-actual-name { color: var(--teal); font-weight: 600; }
+    .dn-planned-ref { font-size: 0.75rem; color: var(--text-light); font-style: italic; margin-top: 3px; }
+    .dn-edit-btn {
+      background: none; border: none; cursor: pointer;
+      padding: 0 3px; color: var(--text-light); font-size: 0.875rem; vertical-align: middle;
+    }
+    .dn-edit-btn:hover { color: var(--teal); }
+    .dn-error-msg {
+      background: #fee2e2; border: 1px solid #fca5a5; color: #dc2626;
+      border-radius: 8px; padding: 12px; font-size: 0.875rem; margin-top: 10px; line-height: 1.5;
+    }
+    .dn-api-key-prompt {
+      background: var(--amber-light); border: 1.5px solid var(--amber);
+      border-radius: 10px; padding: 12px 14px; margin-bottom: 10px;
+    }
   </style>
 </head>
 <body>
@@ -275,6 +374,11 @@ const BK_OPTIONS = [
   { name: 'South Indian rava upma',                     protein: 12, cal: 320 },
 ];
 
+/* Dinner logger state (persists across tab switches within a session) */
+let pendingDinnerPhoto   = {}; // date → { base64, dataUrl, mimeType }
+let activeDinnerTab      = {}; // date → 'plan' | 'photo' | 'custom'
+let pendingDinnerResults = {}; // date → { result, source }
+
 const DAILY_TIPS = [
   "Consistency beats perfection — showing up 80% is better than aiming for 100% and quitting.",
   "Every meal checked off is a deposit in your future self's health account.",
@@ -334,6 +438,14 @@ function isPastOrToday(date) { return date <= todayStr(); }
 function getActualBkNutrition(state, plannedMeal) {
   if (state.meals[0] && state.actualBreakfast) {
     return { protein: state.actualBreakfast.protein || 0, cal: state.actualBreakfast.calories || 0 };
+  }
+  return { protein: plannedMeal.protein || 0, cal: plannedMeal.cal || 0 };
+}
+
+/* Returns protein/cal for dinner — uses logged values if available */
+function getActualDinnerNutrition(state, plannedMeal) {
+  if (state.meals[4] && state.actualDinner) {
+    return { protein: state.actualDinner.totalProtein || 0, cal: state.actualDinner.totalCalories || 0 };
   }
   return { protein: plannedMeal.protein || 0, cal: plannedMeal.cal || 0 };
 }
@@ -450,10 +562,11 @@ function openDay(date) {
 
   const mc   = state.meals.filter(Boolean).length;
   const bkNut = getActualBkNutrition(state, dayObj.meals[0]);
-  // ttl = potential protein if all meals eaten (uses actual bk if logged)
-  const ttl  = dayObj.meals.reduce((s,m,i) => s + (i===0 ? bkNut.protein : (m.protein||0)), 0);
-  const pc   = state.meals.reduce((s,_,i) => s + (state.meals[i] ? (i===0 ? bkNut.protein : (dayObj.meals[i].protein||0)) : 0), 0);
-  const cal  = state.meals.reduce((s,_,i) => s + (state.meals[i] ? (i===0 ? bkNut.cal     : (dayObj.meals[i].cal||0))     : 0), 0);
+  const dnNut = getActualDinnerNutrition(state, dayObj.meals[4]);
+  // ttl = potential protein if all meals eaten (uses actual bk/dn if logged)
+  const ttl  = dayObj.meals.reduce((s,m,i) => s + (i===0 ? bkNut.protein : i===4 ? dnNut.protein : (m.protein||0)), 0);
+  const pc   = state.meals.reduce((s,_,i) => s + (state.meals[i] ? (i===0 ? bkNut.protein : i===4 ? dnNut.protein : (dayObj.meals[i].protein||0)) : 0), 0);
+  const cal  = state.meals.reduce((s,_,i) => s + (state.meals[i] ? (i===0 ? bkNut.cal     : i===4 ? dnNut.cal     : (dayObj.meals[i].cal||0))     : 0), 0);
 
   // Day type label
   let typeLabel = '';
@@ -495,10 +608,12 @@ function openDay(date) {
         <div class="section-lbl">Meals</div>
   `;
 
-  // Meal rows — breakfast (index 0) uses flexible logger
+  // Meal rows — breakfast (0) and dinner (4) use flexible loggers
   dayObj.meals.forEach((meal, i) => {
     if (i === 0) {
       html += renderBreakfastHTML(date, meal, state, isPast);
+    } else if (i === 4) {
+      html += renderDinnerHTML(date, meal, state, isPast);
     } else {
       const checked = state.meals[i] || false;
       html += `
@@ -613,8 +728,9 @@ function refreshDetailMiniStats(date) {
   const state = loadDay(date);
   const mc    = state.meals.filter(Boolean).length;
   const bkNut = getActualBkNutrition(state, dayObj.meals[0]);
-  const pc    = state.meals.reduce((s,_,i) => s + (state.meals[i] ? (i===0 ? bkNut.protein : (dayObj.meals[i].protein||0)) : 0), 0);
-  const cal   = state.meals.reduce((s,_,i) => s + (state.meals[i] ? (i===0 ? bkNut.cal     : (dayObj.meals[i].cal||0))     : 0), 0);
+  const dnNut = getActualDinnerNutrition(state, dayObj.meals[4]);
+  const pc    = state.meals.reduce((s,_,i) => s + (state.meals[i] ? (i===0 ? bkNut.protein : i===4 ? dnNut.protein : (dayObj.meals[i].protein||0)) : 0), 0);
+  const cal   = state.meals.reduce((s,_,i) => s + (state.meals[i] ? (i===0 ? bkNut.cal     : i===4 ? dnNut.cal     : (dayObj.meals[i].cal||0))     : 0), 0);
 
   const e = id => document.getElementById(id);
   if (e('dmsChecked')) e('dmsChecked').textContent = mc+'/5';
@@ -757,6 +873,358 @@ function confirmBreakfast(date) {
 /* Cancel ate-mode and return to plan mode view */
 function cancelBkAteMode(date) {
   openDay(date);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   DINNER SMART LOGGER
+═══════════════════════════════════════════════════════════ */
+
+const DN_KEY_STORE = 'wellness_anthropic_key';
+
+/* Main render entry — returns HTML for the dinner slot (meal index 4) */
+function renderDinnerHTML(date, plannedMeal, state, isPast) {
+  const checked   = state.meals[4] || false;
+  const ad        = state.actualDinner || null;
+  const hasLogged = checked && ad;
+
+  if (!isPast) {
+    // Future: plain unclickable row
+    return `
+      <div id="dnContainer">
+        <label class="meal-row" id="mealRow4" style="cursor:default">
+          <input type="checkbox" id="mealCb4" disabled>
+          <div class="meal-info">
+            <div class="meal-type">${MEAL_ICONS[4]} ${plannedMeal.type}</div>
+            <div class="meal-food">${plannedMeal.food}</div>
+          </div>
+          <span class="protein-pill">${plannedMeal.protein}g · ${plannedMeal.cal} cal</span>
+        </label>
+      </div>`;
+  }
+
+  if (hasLogged) {
+    const isDiff = ad.description && ad.description !== plannedMeal.food;
+    return `
+      <div id="dnContainer">
+        <label class="meal-row is-checked" id="mealRow4"
+               style="cursor:default;align-items:flex-start">
+          <input type="checkbox" id="mealCb4" checked
+                 onchange="toggleMeal('${date}',4,this.checked)">
+          <div class="meal-info" style="flex:1">
+            <div class="meal-type">
+              ${MEAL_ICONS[4]} Dinner
+              ${isDiff
+                ? '<span class="dn-amber-badge">Logged differently from plan</span>'
+                : '<span class="bk-amber-badge">Logged ✓</span>'}
+              <button class="dn-edit-btn" onclick="editDinner('${date}')"
+                      title="Change dinner log">✏️</button>
+            </div>
+            <div class="meal-food dn-actual-name">${ad.description}</div>
+            ${isDiff ? `<div class="dn-planned-ref">Planned: ${plannedMeal.food}</div>` : ''}
+          </div>
+          <span class="protein-pill bk-actual-pill">${ad.totalProtein}g · ${ad.totalCalories} cal</span>
+        </label>
+      </div>`;
+  }
+
+  // Default: tab selector
+  const tab = activeDinnerTab[date] || 'plan';
+  return `<div id="dnContainer">${_dnTabsHTML(date, plannedMeal, state, tab)}</div>`;
+}
+
+/* Renders the three-tab header + content area */
+function _dnTabsHTML(date, plannedMeal, state, tab) {
+  return `
+    <div class="dn-tabs">
+      <button class="dn-tab-btn ${tab==='plan'  ?'active':''}" onclick="switchDinnerTab('${date}','plan')">📋 Plan</button>
+      <button class="dn-tab-btn ${tab==='photo' ?'active':''}" onclick="switchDinnerTab('${date}','photo')">📷 Photo</button>
+      <button class="dn-tab-btn ${tab==='custom'?'active':''}" onclick="switchDinnerTab('${date}','custom')">✏️ Custom</button>
+    </div>
+    <div id="dnTabContent">${_dnTabContent(date, plannedMeal, state, tab)}</div>`;
+}
+
+/* Content for each tab */
+function _dnTabContent(date, plannedMeal, state, tab) {
+  const checked = state.meals[4] || false;
+  if (tab === 'plan') {
+    return `
+      <label class="meal-row ${checked?'is-checked':''}" id="mealRow4" style="cursor:pointer">
+        <input type="checkbox" id="mealCb4" ${checked?'checked':''}
+               onchange="toggleMeal('${date}',4,this.checked)">
+        <div class="meal-info">
+          <div class="meal-type">${MEAL_ICONS[4]} ${plannedMeal.type}</div>
+          <div class="meal-food">${plannedMeal.food}</div>
+        </div>
+        <span class="protein-pill">${plannedMeal.protein}g · ${plannedMeal.cal} cal</span>
+      </label>`;
+  }
+  if (tab === 'photo')  return _dnPhotoTabHTML(date);
+  if (tab === 'custom') return _dnCustomTabHTML(date);
+  return '';
+}
+
+/* Tab switcher — replaces dnContainer innerHTML */
+function switchDinnerTab(date, tab) {
+  activeDinnerTab[date] = tab;
+  const dayObj = DAYS.find(d => d.date === date);
+  const state  = loadDay(date);
+  const c = document.getElementById('dnContainer');
+  if (c && dayObj) c.innerHTML = _dnTabsHTML(date, dayObj.meals[4], state, tab);
+}
+
+/* ── Photo tab HTML ──────────────────────────────────── */
+function _dnPhotoTabHTML(date) {
+  const apiKey = localStorage.getItem(DN_KEY_STORE) || '';
+  const keyBlock = !apiKey ? _dnApiKeyBlock() : '';
+  const pending  = pendingDinnerPhoto[date];
+  return `
+    ${keyBlock}
+    <input type="file" id="dnPhotoInput" accept="image/*" capture="environment"
+           style="display:none" onchange="handleDinnerPhotoFile('${date}')">
+    ${pending ? `
+      <img src="${pending.dataUrl}" class="dn-photo-preview" alt="Dinner photo">
+      <button class="btn btn-primary" style="width:100%;margin-bottom:8px"
+              onclick="analyzeDinnerPhoto('${date}')">🔍 Analyze my plate</button>
+      <button class="btn btn-outline btn-sm" style="width:100%"
+              onclick="document.getElementById('dnPhotoInput').click()">📷 Change photo</button>
+    ` : `
+      <div class="dn-photo-box"
+           onclick="document.getElementById('dnPhotoInput').click()">
+        <div class="dn-photo-icon">📷</div>
+        <div class="dn-photo-label">Take a photo or upload your plate</div>
+        <div class="dn-photo-sublabel">Tap to open camera or choose from gallery</div>
+      </div>
+    `}
+    <div id="dnPhotoResults"></div>`;
+}
+
+/* ── Custom tab HTML ─────────────────────────────────── */
+function _dnCustomTabHTML(date) {
+  const apiKey = localStorage.getItem(DN_KEY_STORE) || '';
+  const keyBlock = !apiKey ? _dnApiKeyBlock() : '';
+  return `
+    ${keyBlock}
+    <textarea class="form-control" id="dnCustomText" style="min-height:88px;margin-bottom:10px"
+              placeholder="Describe what you ate — e.g. two rotis, one bowl dal tadka, small raita"></textarea>
+    <button class="btn btn-primary" style="width:100%"
+            onclick="analyzeDinnerCustom('${date}')">🔍 Calculate nutrition</button>
+    <div id="dnCustomResults" style="margin-top:10px"></div>`;
+}
+
+/* Inline API key prompt (shown when key not yet saved) */
+function _dnApiKeyBlock() {
+  return `
+    <div class="dn-api-key-prompt">
+      <div style="font-size:0.8125rem;font-weight:700;color:var(--amber);margin-bottom:6px">
+        🔑 Anthropic API Key needed for AI analysis
+      </div>
+      <input type="text" class="form-control" id="dnApiKeyInput"
+             placeholder="sk-ant-api03-…" style="margin-bottom:8px;font-size:0.8125rem">
+      <button class="btn btn-outline btn-sm" onclick="saveDnApiKey()">Save Key</button>
+      <div style="font-size:0.75rem;color:var(--text-light);margin-top:6px">
+        Get it at console.anthropic.com → API Keys. Stored in your browser only.
+      </div>
+    </div>`;
+}
+
+function saveDnApiKey() {
+  const input = document.getElementById('dnApiKeyInput');
+  if (!input) return;
+  const key = input.value.trim();
+  if (!key) { alert('Please enter your API key.'); return; }
+  localStorage.setItem(DN_KEY_STORE, key);
+  // Re-render current tab without the key prompt
+  const tab = activeDinnerTab[selectedDate] || 'photo';
+  switchDinnerTab(selectedDate, tab);
+}
+
+/* ── File input handler ──────────────────────────────── */
+function handleDinnerPhotoFile(date) {
+  const input = document.getElementById('dnPhotoInput');
+  if (!input || !input.files || !input.files[0]) return;
+  const file = input.files[0];
+  const reader = new FileReader();
+  reader.onload = e => {
+    const dataUrl = e.target.result;
+    pendingDinnerPhoto[date] = {
+      base64:   dataUrl.split(',')[1],
+      dataUrl,
+      mimeType: file.type || 'image/jpeg',
+    };
+    switchDinnerTab(date, 'photo'); // re-render with preview
+  };
+  reader.readAsDataURL(file);
+}
+
+/* ── Anthropic API call ──────────────────────────────── */
+async function _callClaude(system, messages) {
+  const key = localStorage.getItem(DN_KEY_STORE) || '';
+  if (!key) throw new Error('No API key saved');
+  const res = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key':           key,
+      'anthropic-version':   '2023-06-01',
+      'anthropic-beta':      'interstitial-ignores-injected-prompts-2025-03-12',
+    },
+    body: JSON.stringify({
+      model: 'claude-sonnet-4-20250514',
+      max_tokens: 1000,
+      system,
+      messages,
+    }),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error?.message || 'HTTP ' + res.status);
+  }
+  const data = await res.json();
+  const text = (data.content?.[0]?.text || '')
+    .replace(/```json\s*/g, '').replace(/```\s*/g, '').trim();
+  return JSON.parse(text);
+}
+
+/* ── Photo analysis ──────────────────────────────────── */
+async function analyzeDinnerPhoto(date) {
+  const pending = pendingDinnerPhoto[date];
+  if (!pending) return;
+  const resultsDiv = document.getElementById('dnPhotoResults');
+  if (resultsDiv) resultsDiv.innerHTML = _dnSpinner('Analyzing your plate…');
+
+  const system = 'You are a nutrition expert. The user has sent you a photo of their meal. Analyze what you can see on the plate and provide a structured estimate of the nutritional content. Always respond in this exact JSON format with no extra text: {"foods":[{"name":string,"portion":string,"protein_g":number,"calories":number}],"total_protein_g":number,"total_calories":number,"confidence":"high" or "medium" or "low","notes":string}. Be realistic with portions. If you cannot identify something clearly, include it with your best guess and mention it in notes. Always assume home-cooked Indian, South Indian, Italian, Thai or Mediterranean food as the most likely context since that is what this user eats.';
+
+  try {
+    const result = await _callClaude(system, [{
+      role: 'user',
+      content: [
+        { type: 'image', source: { type: 'base64', media_type: pending.mimeType, data: pending.base64 } },
+        { type: 'text', text: 'Please analyze this meal photo and estimate its nutritional content.' },
+      ],
+    }]);
+    pendingDinnerResults[date] = { result, source: 'photo' };
+    if (resultsDiv) resultsDiv.innerHTML = _dnResultsCardHTML(date, result);
+  } catch (err) {
+    if (resultsDiv) resultsDiv.innerHTML = _dnErrorHTML(err.message);
+  }
+}
+
+/* ── Custom text analysis ────────────────────────────── */
+async function analyzeDinnerCustom(date) {
+  const ta   = document.getElementById('dnCustomText');
+  const text = ta ? ta.value.trim() : '';
+  if (!text) { alert('Please describe what you ate.'); return; }
+  const resultsDiv = document.getElementById('dnCustomResults');
+  if (resultsDiv) resultsDiv.innerHTML = _dnSpinner('Calculating nutrition…');
+
+  const system = 'You are a nutrition expert specializing in Indian, South Indian, Italian, Thai and Mediterranean home cooking. The user will describe what they ate for dinner. Estimate the protein and calorie content realistically based on typical home-cooked portion sizes. Always respond in this exact JSON format with no extra text: {"foods":[{"name":string,"portion":string,"protein_g":number,"calories":number}],"total_protein_g":number,"total_calories":number,"confidence":"high" or "medium" or "low","notes":string}. Be conservative and realistic. Assume typical Indian home cooking with moderate oil and ghee. If the user mentions paneer assume 100g unless they say otherwise. If they mention roti assume one medium whole wheat roti. If they mention rice assume three-quarters of a cup cooked.';
+
+  try {
+    const result = await _callClaude(system, [{ role: 'user', content: text }]);
+    pendingDinnerResults[date] = { result, source: 'custom' };
+    if (resultsDiv) resultsDiv.innerHTML = _dnResultsCardHTML(date, result);
+  } catch (err) {
+    if (resultsDiv) resultsDiv.innerHTML = _dnErrorHTML(err.message);
+  }
+}
+
+/* ── Results card HTML ───────────────────────────────── */
+function _dnResultsCardHTML(date, result) {
+  const foods     = result.foods || [];
+  const totP      = result.total_protein_g || 0;
+  const totC      = result.total_calories  || 0;
+  const conf      = result.confidence || 'medium';
+  const notes     = result.notes || '';
+  const confCls   = conf === 'high' ? 'dn-conf-high' : conf === 'low' ? 'dn-conf-low' : 'dn-conf-medium';
+  const confLabel = conf.charAt(0).toUpperCase() + conf.slice(1) + ' confidence';
+
+  const rows = foods.map((f, i) => {
+    const bg = i % 2 === 1 ? 'style="background:var(--gray-50)"' : '';
+    return `<tr><td ${bg}>${f.name}</td><td ${bg}>${f.portion}</td><td ${bg}>${f.protein_g}g</td><td ${bg}>${f.calories}</td></tr>`;
+  }).join('');
+
+  return `
+    <div class="dn-results-card">
+      <span class="dn-confidence ${confCls}">● ${confLabel}</span>
+      <table class="dn-foods-table">
+        <thead><tr><th>Food</th><th>Portion</th><th>Protein</th><th>Cal</th></tr></thead>
+        <tbody>
+          ${rows}
+          <tr class="dn-totals-row">
+            <td colspan="2"><strong>Total</strong></td>
+            <td><strong>${totP}g</strong></td>
+            <td><strong>${totC}</strong></td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="dn-totals-large">
+        <div class="dn-total-item"><div class="dn-total-val">${totP}g</div><div class="dn-total-lbl">Protein</div></div>
+        <div class="dn-total-item"><div class="dn-total-val">${totC}</div><div class="dn-total-lbl">Calories</div></div>
+      </div>
+      ${notes ? `<div class="dn-notes">💬 ${notes}</div>` : ''}
+      <div class="dn-results-actions">
+        <button class="btn btn-primary" style="width:100%" onclick="logDinnerFromResult('${date}')">✓ Log this dinner</button>
+        <button class="dn-analyze-again" onclick="retryDinnerAnalysis('${date}')">↺ Analyze again</button>
+      </div>
+    </div>`;
+}
+
+/* ── Log confirmed dinner ────────────────────────────── */
+function logDinnerFromResult(date) {
+  const pending = pendingDinnerResults[date];
+  if (!pending) return;
+  const { result, source } = pending;
+  const dayObj = DAYS.find(d => d.date === date);
+  const foods  = result.foods || [];
+
+  const description = foods.length
+    ? foods.map(f => f.name).join(', ')
+    : (dayObj ? dayObj.meals[4].food : '');
+
+  const state = loadDay(date);
+  state.meals[4]    = true;
+  state.actualDinner = {
+    source,
+    description,
+    foods,
+    totalProtein:   result.total_protein_g || 0,
+    totalCalories:  result.total_calories  || 0,
+    loggedAt:       Date.now(),
+  };
+  saveDay(date, state);
+  delete pendingDinnerResults[date];
+  openDay(date);
+}
+
+/* ── Edit: clear logged dinner, return to tab view ───── */
+function editDinner(date) {
+  const state = loadDay(date);
+  state.actualDinner = null;
+  state.meals[4]     = false;
+  saveDay(date, state);
+  activeDinnerTab[date] = 'plan';
+  openDay(date);
+}
+
+/* ── Retry analysis ──────────────────────────────────── */
+function retryDinnerAnalysis(date) {
+  const src = (pendingDinnerResults[date] || {}).source || 'photo';
+  delete pendingDinnerResults[date];
+  if (src === 'photo') delete pendingDinnerPhoto[date];
+  switchDinnerTab(date, src);
+}
+
+/* ── UI helpers ──────────────────────────────────────── */
+function _dnSpinner(msg) {
+  return `<div class="dn-spinner">
+    <div class="dn-spinner-dot"></div>
+    <div class="dn-spinner-dot"></div>
+    <div class="dn-spinner-dot"></div>
+    <span>${msg}</span>
+  </div>`;
+}
+function _dnErrorHTML(detail) {
+  return `<div class="dn-error-msg">⚠️ Could not analyze right now. Please try the Custom tab instead or check your dinner manually.<br><small style="opacity:0.7">${detail}</small></div>`;
 }
 
 /* ── Init ─────────────────────────────────────────────── */
