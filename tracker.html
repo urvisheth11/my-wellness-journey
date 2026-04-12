@@ -1086,8 +1086,12 @@ async function _callClaude(system, messages) {
   });
   if (!res.ok) throw new Error('HTTP ' + res.status);
   const data = await res.json();
+  // Surface any error returned by Apps Script or Anthropic
+  if (data.error) throw new Error(data.error);
+  if (data.type === 'error') throw new Error(data.error?.message || 'Anthropic error');
   const text = (data.content?.[0]?.text || '')
     .replace(/```json\s*/g, '').replace(/```\s*/g, '').trim();
+  if (!text) throw new Error('Empty response from Claude — check Apps Script logs');
   return JSON.parse(text);
 }
 
