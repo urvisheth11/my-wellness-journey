@@ -879,7 +879,7 @@ function cancelBkAteMode(date) {
    DINNER SMART LOGGER
 ═══════════════════════════════════════════════════════════ */
 
-const DN_KEY_STORE = 'wellness_anthropic_key';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw17iGjXhlw4WIf9G-8lhoooLBrkKLmHHBwpcXATLbGFslD4FxUdrYmD-w0eKwEpxOPTA/exec';
 
 /* Main render entry — returns HTML for the dinner slot (meal index 4) */
 function renderDinnerHTML(date, plannedMeal, state, isPast) {
@@ -974,11 +974,11 @@ function switchDinnerTab(date, tab) {
 
 /* ── Photo tab HTML ──────────────────────────────────── */
 function _dnPhotoTabHTML(date) {
-  const apiKey = localStorage.getItem(DN_KEY_STORE) || '';
-  const keyBlock = !apiKey ? _dnApiKeyBlock() : '';
   const pending  = pendingDinnerPhoto[date];
   return `
-    ${keyBlock}
+    <div style="font-size:0.8125rem;color:var(--text-light);margin-bottom:10px">
+      Claude will dynamically calculate nutrition for anything you describe or photograph — any cuisine, any dish, any restaurant meal.
+    </div>
     <input type="file" id="dnPhotoInput" accept="image/*" capture="environment"
            style="display:none" onchange="handleDinnerPhotoFile('${date}')">
     ${pending ? `
@@ -1000,42 +1000,15 @@ function _dnPhotoTabHTML(date) {
 
 /* ── Custom tab HTML ─────────────────────────────────── */
 function _dnCustomTabHTML(date) {
-  const apiKey = localStorage.getItem(DN_KEY_STORE) || '';
-  const keyBlock = !apiKey ? _dnApiKeyBlock() : '';
   return `
-    ${keyBlock}
+    <div style="font-size:0.8125rem;color:var(--text-light);margin-bottom:10px">
+      Claude will dynamically calculate nutrition for anything you describe or photograph — any cuisine, any dish, any restaurant meal.
+    </div>
     <textarea class="form-control" id="dnCustomText" style="min-height:88px;margin-bottom:10px"
               placeholder="Describe what you ate — e.g. two rotis, one bowl dal tadka, small raita"></textarea>
     <button class="btn btn-primary" style="width:100%"
             onclick="analyzeDinnerCustom('${date}')">🔍 Calculate nutrition</button>
     <div id="dnCustomResults" style="margin-top:10px"></div>`;
-}
-
-/* Inline API key prompt (shown when key not yet saved) */
-function _dnApiKeyBlock() {
-  return `
-    <div class="dn-api-key-prompt">
-      <div style="font-size:0.8125rem;font-weight:700;color:var(--amber);margin-bottom:6px">
-        🔑 Anthropic API Key needed for AI analysis
-      </div>
-      <input type="text" class="form-control" id="dnApiKeyInput"
-             placeholder="sk-ant-api03-…" style="margin-bottom:8px;font-size:0.8125rem">
-      <button class="btn btn-outline btn-sm" onclick="saveDnApiKey()">Save Key</button>
-      <div style="font-size:0.75rem;color:var(--text-light);margin-top:6px">
-        Get it at console.anthropic.com → API Keys. Stored in your browser only.
-      </div>
-    </div>`;
-}
-
-function saveDnApiKey() {
-  const input = document.getElementById('dnApiKeyInput');
-  if (!input) return;
-  const key = input.value.trim();
-  if (!key) { alert('Please enter your API key.'); return; }
-  localStorage.setItem(DN_KEY_STORE, key);
-  // Re-render current tab without the key prompt
-  const tab = activeDinnerTab[selectedDate] || 'photo';
-  switchDinnerTab(selectedDate, tab);
 }
 
 /* ── File input handler ──────────────────────────────── */
@@ -1056,29 +1029,19 @@ function handleDinnerPhotoFile(date) {
   reader.readAsDataURL(file);
 }
 
-/* ── Anthropic API call ──────────────────────────────── */
+/* ── Apps Script proxy call ──────────────────────────── */
 async function _callClaude(system, messages) {
-  const key = localStorage.getItem(DN_KEY_STORE) || '';
-  if (!key) throw new Error('No API key saved');
-  const res = await fetch('https://api.anthropic.com/v1/messages', {
+  const claudePayload = {
+    model: 'claude-opus-4-20250514',
+    max_tokens: 1000,
+    system,
+    messages,
+  };
+  const res = await fetch(APPS_SCRIPT_URL, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-api-key':           key,
-      'anthropic-version':   '2023-06-01',
-      'anthropic-beta':      'interstitial-ignores-injected-prompts-2025-03-12',
-    },
-    body: JSON.stringify({
-      model: 'claude-sonnet-4-20250514',
-      max_tokens: 1000,
-      system,
-      messages,
-    }),
+    body: JSON.stringify({ action: 'analyze_nutrition', claudePayload }),
   });
-  if (!res.ok) {
-    const err = await res.json().catch(() => ({}));
-    throw new Error(err.error?.message || 'HTTP ' + res.status);
-  }
+  if (!res.ok) throw new Error('HTTP ' + res.status);
   const data = await res.json();
   const text = (data.content?.[0]?.text || '')
     .replace(/```json\s*/g, '').replace(/```\s*/g, '').trim();
@@ -1092,7 +1055,7 @@ async function analyzeDinnerPhoto(date) {
   const resultsDiv = document.getElementById('dnPhotoResults');
   if (resultsDiv) resultsDiv.innerHTML = _dnSpinner('Analyzing your plate…');
 
-  const system = 'You are a nutrition expert. The user has sent you a photo of their meal. Analyze what you can see on the plate and provide a structured estimate of the nutritional content. Always respond in this exact JSON format with no extra text: {"foods":[{"name":string,"portion":string,"protein_g":number,"calories":number}],"total_protein_g":number,"total_calories":number,"confidence":"high" or "medium" or "low","notes":string}. Be realistic with portions. If you cannot identify something clearly, include it with your best guess and mention it in notes. Always assume home-cooked Indian, South Indian, Italian, Thai or Mediterranean food as the most likely context since that is what this user eats.';
+  const system = 'You are a nutrition expert with expertise in all world cuisines. Analyze the food visible in this image and provide a detailed nutritional breakdown. Always respond with ONLY a valid JSON object with no markdown: {"foods":[{"name":string,"portion":string,"protein_g":number,"calories":number}],"total_protein_g":number,"total_calories":number,"confidence":"high" or "medium" or "low","notes":string}. Be realistic with portions. If you cannot identify something clearly, include it with your best guess and mention it in notes. The user primarily eats Indian, South Indian, Italian, Thai or Mediterranean food — use this as context when identifying dishes.';
 
   try {
     const result = await _callClaude(system, [{
@@ -1105,7 +1068,7 @@ async function analyzeDinnerPhoto(date) {
     pendingDinnerResults[date] = { result, source: 'photo' };
     if (resultsDiv) resultsDiv.innerHTML = _dnResultsCardHTML(date, result);
   } catch (err) {
-    if (resultsDiv) resultsDiv.innerHTML = _dnErrorHTML(err.message);
+    if (resultsDiv) resultsDiv.innerHTML = _dnErrorHTML(err.message, date, 'photo');
   }
 }
 
@@ -1117,14 +1080,14 @@ async function analyzeDinnerCustom(date) {
   const resultsDiv = document.getElementById('dnCustomResults');
   if (resultsDiv) resultsDiv.innerHTML = _dnSpinner('Calculating nutrition…');
 
-  const system = 'You are a nutrition expert specializing in Indian, South Indian, Italian, Thai and Mediterranean home cooking. The user will describe what they ate for dinner. Estimate the protein and calorie content realistically based on typical home-cooked portion sizes. Always respond in this exact JSON format with no extra text: {"foods":[{"name":string,"portion":string,"protein_g":number,"calories":number}],"total_protein_g":number,"total_calories":number,"confidence":"high" or "medium" or "low","notes":string}. Be conservative and realistic. Assume typical Indian home cooking with moderate oil and ghee. If the user mentions paneer assume 100g unless they say otherwise. If they mention roti assume one medium whole wheat roti. If they mention rice assume three-quarters of a cup cooked.';
+  const system = 'You are a nutrition expert. Calculate realistic protein and calorie estimates for any meal described — any cuisine, any restaurant dish, any home-cooked food from anywhere in the world. Always respond with ONLY a valid JSON object with no markdown: {"foods":[{"name":string,"portion":string,"protein_g":number,"calories":number}],"total_protein_g":number,"total_calories":number,"confidence":"high" or "medium" or "low","notes":string}. Be conservative and realistic. The user primarily cooks Indian, South Indian, Italian, Thai or Mediterranean food — if the dish is ambiguous use that as context. If the user mentions paneer assume 100g unless stated otherwise. If they mention roti assume one medium whole wheat roti. If they mention rice assume three-quarters of a cup cooked.';
 
   try {
     const result = await _callClaude(system, [{ role: 'user', content: text }]);
     pendingDinnerResults[date] = { result, source: 'custom' };
     if (resultsDiv) resultsDiv.innerHTML = _dnResultsCardHTML(date, result);
   } catch (err) {
-    if (resultsDiv) resultsDiv.innerHTML = _dnErrorHTML(err.message);
+    if (resultsDiv) resultsDiv.innerHTML = _dnErrorHTML(err.message, date, 'custom');
   }
 }
 
@@ -1223,8 +1186,48 @@ function _dnSpinner(msg) {
     <span>${msg}</span>
   </div>`;
 }
-function _dnErrorHTML(detail) {
-  return `<div class="dn-error-msg">⚠️ Could not analyze right now. Please try the Custom tab instead or check your dinner manually.<br><small style="opacity:0.7">${detail}</small></div>`;
+function _dnErrorHTML(detail, date, source) {
+  const dateAttr  = date   ? ` data-date="${date}"`     : '';
+  const srcAttr   = source ? ` data-source="${source}"` : '';
+  return `
+    <div class="dn-error-msg">
+      ⚠️ AI analysis unavailable right now.<br>
+      <small style="opacity:0.7">${detail}</small>
+    </div>
+    <div style="margin-top:14px;padding:14px;background:var(--gray-50);border-radius:10px;border:1px solid var(--gray-200)">
+      <div style="font-size:0.8125rem;font-weight:700;margin-bottom:10px;color:var(--text)">Enter nutrition manually:</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
+        <div>
+          <label style="font-size:0.75rem;color:var(--text-light);font-weight:600">Protein (g)</label>
+          <input type="number" id="dnManualProtein" class="form-control" min="0" max="300" placeholder="e.g. 35" style="margin-top:4px">
+        </div>
+        <div>
+          <label style="font-size:0.75rem;color:var(--text-light);font-weight:600">Calories</label>
+          <input type="number" id="dnManualCal" class="form-control" min="0" max="3000" placeholder="e.g. 550" style="margin-top:4px">
+        </div>
+      </div>
+      <button class="btn btn-primary btn-sm" style="width:100%"
+              onclick="logDinnerManual('${date || ''}')"${dateAttr}${srcAttr}>Log These Numbers</button>
+    </div>`;
+}
+
+function logDinnerManual(date) {
+  const protein = parseInt(document.getElementById('dnManualProtein')?.value || '0', 10) || 0;
+  const cal     = parseInt(document.getElementById('dnManualCal')?.value     || '0', 10) || 0;
+  if (!protein && !cal) { alert('Please enter at least protein or calories.'); return; }
+  const manualResult = {
+    foods: [{ name: 'Dinner (manual entry)', portion: '—', protein_g: protein, calories: cal }],
+    total_protein_g: protein,
+    total_calories:  cal,
+    confidence: 'low',
+    notes: 'Manually entered',
+  };
+  pendingDinnerResults[date] = { result: manualResult, source: 'manual' };
+  const state = loadDay(date);
+  const dayObj = DAYS.find(d => d.date === date);
+  if (!dayObj) return;
+  const resultsDiv = document.getElementById('dnCustomResults') || document.getElementById('dnPhotoResults');
+  if (resultsDiv) resultsDiv.innerHTML = _dnResultsCardHTML(date, manualResult);
 }
 
 /* ── Init ─────────────────────────────────────────────── */
