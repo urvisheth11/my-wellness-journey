@@ -147,6 +147,19 @@
       /* Detail header: tighter */
       .detail-header-strip { padding: 12px 14px; }
       .detail-header-left h2 { font-size: 1rem; }
+      /* ── MEAL ROW FIXES ── */
+      /* Allow food text to wrap instead of truncating */
+      .meal-food { white-space: normal !important; word-break: break-word; }
+      /* Tighten row padding and gap so protein pill has room */
+      .meal-row { padding: 9px 10px; gap: 8px; }
+      /* Smaller protein pill on mobile */
+      .protein-pill { font-size: 0.72rem; padding: 2px 7px; }
+      /* Prevent grid columns from overflowing the card */
+      .meals-col, .sidebar-col { min-width: 0; overflow: hidden; }
+      /* Ensure all inputs/textareas stay within their container */
+      .form-control, .bk-select { max-width: 100%; }
+      /* Clip any stray overflow in the detail panel */
+      #detailPanel .card-body { overflow-x: hidden; }
     }
 
     @media (max-width: 360px) {
