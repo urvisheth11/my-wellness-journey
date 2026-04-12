@@ -123,6 +123,42 @@
     @media (max-width: 480px) {
       .cal-day-btn { width: 30px; height: 30px; font-size: 0.7rem; }
       .cal-grid { gap: 3px; }
+      /* DOW headers: tighter on small screens */
+      .cal-dow-header { font-size: 0.65rem; letter-spacing: 0; }
+      /* Stats: always 2-column on phones */
+      .monthly-stats { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+      /* Mini-stats: allow wrapping so they don't overflow */
+      .detail-mini-stats { flex-wrap: wrap; gap: 8px; }
+      .detail-mini-stat { flex: 1 1 70px; padding: 10px 10px; }
+      .dms-val { font-size: 1.25rem; }
+      /* Dinner tabs: tighter padding so 3 fit */
+      .dn-tab-btn { padding: 6px 4px; font-size: 0.75rem; }
+      /* Dinner food table: hide Portion column, reduce padding */
+      .dn-foods-table th:nth-child(2),
+      .dn-foods-table td:nth-child(2) { display: none; }
+      .dn-foods-table { font-size: 0.75rem; }
+      .dn-foods-table th, .dn-foods-table td { padding: 5px 6px; }
+      /* Dinner totals: slightly smaller on phones */
+      .dn-total-val { font-size: 1.25rem; }
+      .dn-total-item { padding: 10px 10px; }
+      /* Calendar legend: wrap more compactly */
+      .cal-legend { gap: 10px; }
+      .cal-legend-item { font-size: 0.75rem; }
+      /* Detail header: tighter */
+      .detail-header-strip { padding: 12px 14px; }
+      .detail-header-left h2 { font-size: 1rem; }
+    }
+
+    @media (max-width: 360px) {
+      /* Tiniest phones: shrink calendar further */
+      .cal-day-btn { width: 26px; height: 26px; font-size: 0.62rem; }
+      .cal-grid { gap: 2px; }
+      /* Stack breakfast action buttons vertically for easy tapping */
+      .bk-action-row { flex-direction: column; }
+      .bk-action-row .btn { width: 100%; justify-content: center; min-height: 40px; }
+      /* Custom breakfast inputs: name full width, protein+cal side by side below */
+      .bk-custom-inputs { grid-template-columns: 1fr 1fr; }
+      .bk-custom-inputs input:first-child { grid-column: 1 / -1; }
     }
 
     /* ── BREAKFAST FLEXIBLE LOGGER ───────────────────────── */
@@ -260,10 +296,6 @@
     .dn-error-msg {
       background: #fee2e2; border: 1px solid #fca5a5; color: #dc2626;
       border-radius: 8px; padding: 12px; font-size: 0.875rem; margin-top: 10px; line-height: 1.5;
-    }
-    .dn-api-key-prompt {
-      background: var(--amber-light); border: 1.5px solid var(--amber);
-      border-radius: 10px; padding: 12px 14px; margin-bottom: 10px;
     }
   </style>
 </head>
