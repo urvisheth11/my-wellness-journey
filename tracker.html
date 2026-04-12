@@ -1024,21 +1024,19 @@ function _dnPhotoTabHTML(date) {
     <div style="font-size:0.8125rem;color:var(--text-light);margin-bottom:10px">
       Claude will dynamically calculate nutrition for anything you describe or photograph — any cuisine, any dish, any restaurant meal.
     </div>
-    <input type="file" id="dnPhotoInput" accept="image/*" capture="environment"
+    <input type="file" id="dnPhotoInput" accept="image/*"
            style="display:none" onchange="handleDinnerPhotoFile('${date}')">
     ${pending ? `
       <img src="${pending.dataUrl}" class="dn-photo-preview" alt="Dinner photo">
       <button class="btn btn-primary" style="width:100%;margin-bottom:8px"
               onclick="analyzeDinnerPhoto('${date}')">🔍 Analyze my plate</button>
-      <button class="btn btn-outline btn-sm" style="width:100%"
-              onclick="document.getElementById('dnPhotoInput').click()">📷 Change photo</button>
+      <label for="dnPhotoInput" class="btn btn-outline btn-sm" style="width:100%;display:flex;align-items:center;justify-content:center;cursor:pointer">📷 Change photo</label>
     ` : `
-      <div class="dn-photo-box"
-           onclick="document.getElementById('dnPhotoInput').click()">
+      <label for="dnPhotoInput" class="dn-photo-box" style="cursor:pointer;display:block">
         <div class="dn-photo-icon">📷</div>
-        <div class="dn-photo-label">Take a photo or upload your plate</div>
-        <div class="dn-photo-sublabel">Tap to open camera or choose from gallery</div>
-      </div>
+        <div class="dn-photo-label">Take a photo or upload from camera roll</div>
+        <div class="dn-photo-sublabel">Tap to choose from gallery or take a new photo</div>
+      </label>
     `}
     <div id="dnPhotoResults"></div>`;
 }
